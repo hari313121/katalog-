@@ -336,9 +336,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const kembalian = nominalPembayaran - totalBelanja;
 
 
-        if (!namaPemesan || !alamatPemesan) {
-            alert('Mohon masukkan nama pemesan dan alamat lengkap.');
-            return;
+        if (keranjang.length === 0) {
+    alert('Keranjang belanja masih kosong!');
+    return;
         }
         if (keranjang.length === 0) {
             alert('Keranjang belanja masih kosong!');
@@ -394,7 +394,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Detail Pembayaran di Struk
         printWindow.document.write('<p class="print-payment-info"><span>BAYAR:</span> ' + formatRupiah(nominalPembayaran) + '</p>');
         printWindow.document.write('<p class="print-payment-info"><span>KEMBALIAN:</span> ' + formatRupiah(kembalian) + '</p>');
-        
+        printWindow.document.write(`<p>Pelanggan: ${namaPemesan || '-'}</p>`);
+        printWindow.document.write(`<p>Alamat: ${alamatPemesan || '-'}</p>`);
 
         // Gambar QRIS untuk CETAK (qris.webp)
         printWindow.document.write('<div style="text-align: center; margin-top: 10px; margin-bottom: 5px;">');
@@ -434,10 +435,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const kembalian = nominalPembayaran - totalBelanja;
 
 
-        if (!namaPemesan || !alamatPemesan) {
-            alert('Mohon masukkan nama pemesan dan alamat lengkap untuk pesanan WhatsApp.');
-            return;
-        }
+       if (keranjang.length === 0) {
+    alert('Keranjang belanja masih kosong, tidak bisa pesan via WhatsApp!');
+    return;
+}
+
         if (keranjang.length === 0) {
             alert('Keranjang belanja masih kosong, tidak bisa pesan via WhatsApp!');
             return;
@@ -471,6 +473,9 @@ document.addEventListener('DOMContentLoaded', () => {
         whatsappMessage += "-----------------------------\n";
         whatsappMessage += `*Total: ${keranjangTotal.textContent}*\n`;
         // Detail Pembayaran di WhatsApp
+
+        whatsappMessage += `Pelanggan: ${namaPemesan || '-'}\n`;
+        whatsappMessage += `Alamat: ${alamatPemesan || '-'}\n`;
         whatsappMessage += `*Bayar: ${formatRupiah(nominalPembayaran)}*\n`;
         whatsappMessage += `*Kembalian: ${formatRupiah(kembalian)}*\n\n`;
         
