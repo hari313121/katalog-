@@ -80,6 +80,46 @@ header {
     font-size: 2em;
 }
 
+/* --- Qty control style for product list menu --- */
+.qty-control {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin-top: 0.5em;
+}
+
+.qty-btn {
+  background: var(--button-default-bg);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 2.2em;
+  height: 2.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3em;
+  cursor: pointer;
+  box-shadow: 0 2px 8px var(--shadow-neon-color);
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.qty-btn:active {
+  background: var(--button-clear-bg);
+}
+
+.qty-value {
+  width: 2.5em;
+  text-align: center;
+  font-size: 1.1em;
+  color: var(--text-accent-color);
+  font-weight: bold;
+  background: transparent;
+  border: none;
+  outline: none;
+  pointer-events: none;
+}
+
 /* Product Menu (Grid) - Default for PC/Tablet: 3 columns */
 #produk-list {
     display: grid;

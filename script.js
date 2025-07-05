@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nominalPembayaranInput = document.getElementById('nominal-pembayaran'); 
     const kembalianDisplay = document.getElementById('kembalian-display');     
 
+
     // Modal Pesanan Manual
     const manualOrderModal = document.getElementById('manualOrderModal');
     const manualProductNameInput = document.getElementById('manualProductName');
@@ -367,8 +368,8 @@ document.addEventListener('DOMContentLoaded', () => {
         printWindow.document.write('</div>');
 
         printWindow.document.write('<div class="print-info">');
-        printWindow.document.write(`<p>Pelanggan: ${namaPemesan}</p>`);
-        printWindow.document.write(`<p>Alamat: ${alamatPemesan}</p>`);
+        printWindow.document.write(`<p>Pelanggan: ${namaPemesan || '-'}</p>`);
+        printWindow.document.write(`<p>Alamat: ${alamatPemesan || '-'}</p>`);
         printWindow.document.write(`<p>Opsi: ${opsiMakan}</p>`);
         printWindow.document.write(`<p>Tanggal: ${formattedDate}</p>`);
         printWindow.document.write(`<p>Jam: ${formattedTime}</p>`);
@@ -394,8 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Detail Pembayaran di Struk
         printWindow.document.write('<p class="print-payment-info"><span>BAYAR:</span> ' + formatRupiah(nominalPembayaran) + '</p>');
         printWindow.document.write('<p class="print-payment-info"><span>KEMBALIAN:</span> ' + formatRupiah(kembalian) + '</p>');
-        printWindow.document.write(`<p>Pelanggan: ${namaPemesan || '-'}</p>`);
-        printWindow.document.write(`<p>Alamat: ${alamatPemesan || '-'}</p>`);
+      
 
         // Gambar QRIS untuk CETAK (qris.webp)
         printWindow.document.write('<div style="text-align: center; margin-top: 10px; margin-bottom: 5px;">');
@@ -458,9 +458,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let whatsappMessage = `*${defaultShopName}*\n`;
         whatsappMessage += `Telp: ${defaultPhoneNumber}\n`;
         whatsappMessage += "-----------------------------\n";
-        whatsappMessage += `Pelanggan: ${namaPemesan}\n`;
-        whatsappMessage += `Alamat: ${alamatPemesan}\n`;
-        whatsappMessage += `Opsi: ${opsiMakan}\n`;
+        whatsappMessage += `Pelanggan: ${namaPemesan || '-'}\n`;
+        whatsappMessage += `Alamat: ${alamatPemesan || '-'}\n`;
         whatsappMessage += `Tanggal: ${formattedDate}\n`;
         whatsappMessage += `Jam: ${formattedTime}\n`;
         whatsappMessage += "-----------------------------\n";
@@ -474,8 +473,7 @@ document.addEventListener('DOMContentLoaded', () => {
         whatsappMessage += `*Total: ${keranjangTotal.textContent}*\n`;
         // Detail Pembayaran di WhatsApp
 
-        whatsappMessage += `Pelanggan: ${namaPemesan || '-'}\n`;
-        whatsappMessage += `Alamat: ${alamatPemesan || '-'}\n`;
+        
         whatsappMessage += `*Bayar: ${formatRupiah(nominalPembayaran)}*\n`;
         whatsappMessage += `*Kembalian: ${formatRupiah(kembalian)}*\n\n`;
         
