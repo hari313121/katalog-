@@ -123,7 +123,7 @@ document.getElementById('btnSimpanNamaPemesan').onclick = function() {
     // Informasi default untuk struk (tidak bisa diedit via UI)
     const defaultShopName = "HARINFOOD";
     const defaultPhoneNumber = "6281235368643"; 
-    const defaultFooterText = "Terima Kasih Atas Kunjungannya!";
+    const defaultFooterText = "Terima Kasih!";
 
     // Fungsi utilitas untuk memformat angka menjadi Rupiah
     const formatRupiah = (number) => {
@@ -400,7 +400,7 @@ document.getElementById('btnSimpanNamaPemesan').onclick = function() {
         printWindow.document.write('<div class="print-info">');
         printWindow.document.write(`<p>Pelanggan: ${namaPemesan || '-'}</p>`);
         printWindow.document.write(`<p>Alamat: ${alamatPemesan || '-'}</p>`);
-        printWindow.document.write(`<p>Opsi: ${opsiMakan}</p>`);
+       
         printWindow.document.write(`<p>Tanggal: ${formattedDate}</p>`);
         printWindow.document.write(`<p>Jam: ${formattedTime}</p>`);
         printWindow.document.write('</div>');
@@ -451,7 +451,7 @@ document.getElementById('btnSimpanNamaPemesan').onclick = function() {
         alamatPemesanInput.value = '';
         keteranganPesananInput.value = ''; 
         nominalPembayaranInput.value = 0; 
-        document.getElementById('makan-disini').checked = true; 
+        document.getElementById('dibawa-pulang').checked = true; 
         hitungKembalian(); 
     });
 
