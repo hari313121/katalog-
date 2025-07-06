@@ -597,3 +597,24 @@ document.getElementById('btnSimpanNamaPemesan').onclick = function() {
 function getNamaPemesan() {
   return localStorage.getItem('namaPemesan') || '';
 }
+function hidePilihanMakan() {
+    const opsiIds = [
+        { id: "dibawa-pulang", labelText: "Dibawa Pulang" },
+        { id: "makan-disini", labelText: "Makan di Sini" }
+    ];
+    opsiIds.forEach(opsi => {
+        // Sembunyikan radio button
+        const radio = document.getElementById(opsi.id);
+        if (radio) {
+            radio.style.display = 'none';
+            // radio.disabled = true; // Jika ingin tetap terlihat tapi tidak bisa dipilih
+        }
+        // Sembunyikan label terkait
+        const label = document.querySelector(`label[for='${opsi.id}']`);
+        if (label) {
+            label.style.display = 'none';
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', hidePilihanMakan);
