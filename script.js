@@ -79,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const nominalPembayaranInput = document.getElementById('nominal-pembayaran'); 
     const kembalianDisplay = document.getElementById('kembalian-display');     
 
+
     // Modal Pesanan Manual
     const manualOrderModal = document.getElementById('manualOrderModal');
     const manualProductNameInput = document.getElementById('manualProductName');
@@ -336,9 +337,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const kembalian = nominalPembayaran - totalBelanja;
 
 
-        if (!namaPemesan || !alamatPemesan) {
-            alert('Mohon masukkan nama pemesan dan alamat lengkap.');
-            return;
+        if (keranjang.length === 0) {
+    alert('Keranjang belanja masih kosong!');
+    return;
         }
         if (keranjang.length === 0) {
             alert('Keranjang belanja masih kosong!');
@@ -367,8 +368,8 @@ document.addEventListener('DOMContentLoaded', () => {
         printWindow.document.write('</div>');
 
         printWindow.document.write('<div class="print-info">');
-        printWindow.document.write(`<p>Pelanggan: ${namaPemesan}</p>`);
-        printWindow.document.write(`<p>Alamat: ${alamatPemesan}</p>`);
+        printWindow.document.write(`<p>Pelanggan: ${namaPemesan || '-'}</p>`);
+        printWindow.document.write(`<p>Alamat: ${alamatPemesan || '-'}</p>`);
         printWindow.document.write(`<p>Opsi: ${opsiMakan}</p>`);
         printWindow.document.write(`<p>Tanggal: ${formattedDate}</p>`);
         printWindow.document.write(`<p>Jam: ${formattedTime}</p>`);
@@ -394,7 +395,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Detail Pembayaran di Struk
         printWindow.document.write('<p class="print-payment-info"><span>BAYAR:</span> ' + formatRupiah(nominalPembayaran) + '</p>');
         printWindow.document.write('<p class="print-payment-info"><span>KEMBALIAN:</span> ' + formatRupiah(kembalian) + '</p>');
-        
+      
 
         // Gambar QRIS untuk CETAK (qris.webp)
         printWindow.document.write('<div style="text-align: center; margin-top: 10px; margin-bottom: 5px;">');
@@ -434,10 +435,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const kembalian = nominalPembayaran - totalBelanja;
 
 
-        if (!namaPemesan || !alamatPemesan) {
-            alert('Mohon masukkan nama pemesan dan alamat lengkap untuk pesanan WhatsApp.');
-            return;
-        }
+       if (keranjang.length === 0) {
+    alert('Keranjang belanja masih kosong, tidak bisa pesan via WhatsApp!');
+    return;
+}
+
         if (keranjang.length === 0) {
             alert('Keranjang belanja masih kosong, tidak bisa pesan via WhatsApp!');
             return;
@@ -456,9 +458,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let whatsappMessage = `*${defaultShopName}*\n`;
         whatsappMessage += `Telp: ${defaultPhoneNumber}\n`;
         whatsappMessage += "-----------------------------\n";
-        whatsappMessage += `Pelanggan: ${namaPemesan}\n`;
-        whatsappMessage += `Alamat: ${alamatPemesan}\n`;
-        whatsappMessage += `Opsi: ${opsiMakan}\n`;
+        whatsappMessage += `Pelanggan: ${namaPemesan || '-'}\n`;
+        whatsappMessage += `Alamat: ${alamatPemesan || '-'}\n`;
         whatsappMessage += `Tanggal: ${formattedDate}\n`;
         whatsappMessage += `Jam: ${formattedTime}\n`;
         whatsappMessage += "-----------------------------\n";
@@ -471,6 +472,8 @@ document.addEventListener('DOMContentLoaded', () => {
         whatsappMessage += "-----------------------------\n";
         whatsappMessage += `*Total: ${keranjangTotal.textContent}*\n`;
         // Detail Pembayaran di WhatsApp
+
+        
         whatsappMessage += `*Bayar: ${formatRupiah(nominalPembayaran)}*\n`;
         whatsappMessage += `*Kembalian: ${formatRupiah(kembalian)}*\n\n`;
         
@@ -531,3 +534,36 @@ document.addEventListener('DOMContentLoaded', () => {
     hitungKembalian(); // Hitung kembalian di awal
     manualOrderModal.style.display = 'none'; // Pastikan modal tersembunyi
 });
+// --- Pop Up Nama Pemesan saat pertama kali buka ---
+function tampilkanModalNamaPemesan() {
+  document.getElementById('namaPemesanModal').style.display = 'flex';
+  document.getElementById('inputNamaPemesan').focus();
+}
+
+function sembunyikanModalNamaPemesan() {
+  document.getElementById('namaPemesanModal').style.display = 'none';
+}
+
+// Cek saat load: kalau belum ada nama pemesan di localStorage, tampilkan modal
+window.addEventListener('DOMContentLoaded', function() {
+  if (!localStorage.getItem('namaPemesan')) {
+    tampilkanModalNamaPemesan();
+  }
+});
+
+// Tombol simpan nama
+document.getElementById('btnSimpanNamaPemesan').onclick = function() {
+  var nama = document.getElementById('inputNamaPemesan').value.trim();
+  if (nama.length < 2) {
+    alert('Nama pemesan wajib diisi!');
+    return;
+  }
+  localStorage.setItem('namaPemesan', nama);
+  sembunyikanModalNamaPemesan();
+  // Jika Anda ingin, di sini bisa refresh data atau update tampilan sesuai nama
+};
+
+// Fungsi global untuk mengambil nama pemesan
+function getNamaPemesan() {
+  return localStorage.getItem('namaPemesan') || '';
+}
