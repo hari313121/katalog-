@@ -1,4 +1,34 @@
 document.addEventListener('DOMContentLoaded', () => {
+// Fungsi mengisi semua field nama pemesan di form
+function autofillNamaPemesanForm() {
+    const nama = getNamaPemesan();
+    const namaPemesanInput = document.getElementById('nama-pemesan');
+    if (namaPemesanInput) {
+        namaPemesanInput.value = nama;
+    }
+    // Jika ada field lain yang perlu diisi juga, tambahkan di sini
+}
+
+// Saat DOM loaded, cek dan autofill jika ada nama pemesan
+window.addEventListener('DOMContentLoaded', function() {
+    if (!localStorage.getItem('namaPemesan')) {
+        tampilkanModalNamaPemesan();
+    } else {
+        autofillNamaPemesanForm();
+    }
+});
+
+// Setelah klik Simpan di pop up nama pemesan
+document.getElementById('btnSimpanNamaPemesan').onclick = function() {
+    var nama = document.getElementById('inputNamaPemesan').value.trim();
+    if (nama.length < 2) {
+        alert('Nama pemesan wajib diisi!');
+        return;
+    }
+    localStorage.setItem('namaPemesan', nama);
+    sembunyikanModalNamaPemesan();
+    autofillNamaPemesanForm(); // <-- PENTING!
+};
     // Data produk HARINFOOD
     const produkData = [
         {
