@@ -629,7 +629,6 @@ footer {
         margin-bottom: 10px !important;
         font-size: 9px !important;
         font-weight: bold !important;
-        border-top: 1px dashed #000 !important;
         padding-top: 5px !important;
     }
     hr {
@@ -659,9 +658,8 @@ footer {
         font-size: 1.1em !important;
         font-weight: bold !important;
         text-align: right !important;
-        margin-top: 10px !important;
+        margin-top: 5px !important;
         padding-top: 5px !important;
-        border-top: 1px dashed #000 !important;
         padding-bottom: 5px !important;
     }
     .total-row span { float: left !important; }
