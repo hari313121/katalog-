@@ -43,15 +43,15 @@ document.addEventListener('DOMContentLoaded', () => {
         // PENTING: Anda harus mengganti nilai barcode dengan barcode aktual produk Anda.
         // Barcode ini adalah contoh format EAN-13.
         { id: 1, nama: "Risol", harga: 3000, gambar: "risol.webp", barcode: "risol" },
-        { id: 2, nama: "Cibay", harga: 2500, gambar: "cibay.webp", barcode: "8997000000027" },
-        { id: 3, nama: "Citung", harga: 2500, gambar: "citung.webp", barcode: "8997000000034" },
-        { id: 4, nama: "Topokki", harga: 5000, gambar: "toppoki.webp", barcode: "8997000000041" },
-        { id: 5, nama: "Tteokbokki Besar", harga: 10000, gambar: "toppoki.webp", barcode: "8997000000058" },
-        { id: 6, nama: "Spaghetti", harga: 6000, gambar: "spaghetti.webp", barcode: "8997000000065" },
-        { id: 7, nama: "Spaghetti Besar", harga: 10000, gambar: "spaghetti.webp", barcode: "8997000000072" },
-        { id: 8, nama: "Balungan", harga: 5000, gambar: "balungan.webp", barcode: "8997000000089" },
-        { id: 9, nama: "Es Teh Jumbo", harga: 3000, gambar: "esteh.webp", barcode: "8997000000096" },
-        { id: 10, nama: "Es Teh kecil", harga: 2000, gambar: "esteh.webp", barcode: "8997000000102" }
+        { id: 2, nama: "Cibay", harga: 2500, gambar: "cibay.webp", barcode: "cibay" },
+        { id: 3, nama: "Citung", harga: 2500, gambar: "citung.webp", barcode: "citung" },
+        { id: 4, nama: "Topokki", harga: 5000, gambar: "toppoki.webp", barcode: "toppoki" },
+        { id: 5, nama: "Tteokbokki Besar", harga: 10000, gambar: "toppoki.webp", barcode: "toppoki10" },
+        { id: 6, nama: "Spaghetti", harga: 6000, gambar: "spaghetti.webp", barcode: "spaghetti" },
+        { id: 7, nama: "Spaghetti Besar", harga: 10000, gambar: "spaghetti.webp", barcode: "spaghetti10" },
+        { id: 8, nama: "Balungan", harga: 5000, gambar: "balungan.webp", barcode: "balungan" },
+        { id: 9, nama: "Es Teh Jumbo", harga: 3000, gambar: "esteh.webp", barcode: "esteh" },
+        { id: 10, nama: "Es Teh kecil", harga: 2000, gambar: "esteh.webp", barcode: "esteh2" }
     ];
 
     // --- REFERENSI DOM ---
