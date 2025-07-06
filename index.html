@@ -9,7 +9,6 @@
         integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
-<!-- Modal Nama Pemesan -->
 <div id="namaPemesanModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); align-items:center; justify-content:center;">
   <div style="background:#222; padding:2em 2em 1em 2em; border-radius:12px; box-shadow:0 8px 40px #000; max-width:90vw;">
     <h2>Isi Nama Anda</h2>
@@ -45,7 +44,6 @@
                 <input type="number" id="nominal-pembayaran" min="0" value="0">
                 <p>Kembalian: <span id="kembalian-display">Rp 0</span></p>
             </div>
-            <!-- <button id="clear-keranjang" class="btn-action btn-clear">Bersihkan Keranjang</button> -->
             <div class="pemesanan-container">
                 <h2 class="section-title">Detail Pemesanan</h2>
                 <label for="nama-pemesan">Nama Pemesan:</label>
@@ -68,7 +66,6 @@
     <footer>
         <p>&copy; 2025 HARINFOOD. All Rights Reserved.</p>
     </footer>
-    <!-- Floating Action Buttons -->
     <div class="fab-button fab-manual" id="add-manual-order-fab" title="Tambah Pesanan Manual">
         <i class="fas fa-shopping-basket"></i>
     </div>
@@ -78,6 +75,10 @@
     <div class="fab-button fab-print" id="print-order-fab" title="Cetak Struk">
         <i class="fas fa-print"></i>
     </div>
+    <div class="fab-button fab-barcode" id="scan-barcode-fab" title="Scan Barcode">
+        <i class="fas fa-barcode"></i>
+    </div>
+
     <div id="manualOrderModal" class="modal">
         <div class="modal-content">
             <span class="close-button" onclick="closeManualOrderModal()">&times;</span>
@@ -91,6 +92,18 @@
             <button onclick="addManualOrderItem()">Tambahkan ke Keranjang</button>
         </div>
     </div>
+
+    <div id="barcodeScannerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeBarcodeScannerModal()">&times;</span>
+            <h2 class="modal-title">Scan Barcode Produk</h2>
+            <label for="barcodeInput">Masukkan atau Scan Barcode:</label>
+            <input type="text" id="barcodeInput" autofocus>
+            <p class="scan-feedback" id="scan-feedback">Siap menerima barcode...</p>
+            <button id="submitBarcodeButton">Tambahkan</button>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

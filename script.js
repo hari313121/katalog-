@@ -1,15 +1,18 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ... (bagian MODAL NAMA PEMESAN sama seperti sebelumnya) ...
+    // --- MODAL NAMA PEMESAN ---
     function getNamaPemesan() {
         return localStorage.getItem('namaPemesan') || '';
     }
+
     function tampilkanModalNamaPemesan() {
         document.getElementById('namaPemesanModal').style.display = 'flex';
         document.getElementById('inputNamaPemesan').focus();
     }
+
     function sembunyikanModalNamaPemesan() {
         document.getElementById('namaPemesanModal').style.display = 'none';
     }
+
     function autofillNamaPemesanForm() {
         const nama = getNamaPemesan();
         const namaPemesanInput = document.getElementById('nama-pemesan');
@@ -17,11 +20,13 @@ document.addEventListener('DOMContentLoaded', () => {
             namaPemesanInput.value = nama;
         }
     }
+
     if (!localStorage.getItem('namaPemesan')) {
         tampilkanModalNamaPemesan();
     } else {
         autofillNamaPemesanForm();
     }
+
     document.getElementById('btnSimpanNamaPemesan').onclick = function() {
         var nama = document.getElementById('inputNamaPemesan').value.trim();
         if (nama.length < 2) {
@@ -35,17 +40,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- DATA PRODUK ---
     const produkData = [
-        { id: 1, nama: "Risol", harga: 3000, gambar: "risol.webp" },
-        { id: 2, nama: "Cibay", harga: 2500, gambar: "cibay.webp" },
-        { id: 3, nama: "Citung", harga: 2500, gambar: "citung.webp" },
-        { id: 4, nama: "Topokki", harga: 5000, gambar: "toppoki.webp" },
-        { id: 5, nama: "Tteokbokki Besar", harga: 10000, gambar: "toppoki.webp" },
-        { id: 6, nama: "Spaghetti", harga: 6000, gambar: "spaghetti.webp" },
-        { id: 7, nama: "Spaghetti Besar", harga: 10000, gambar: "spaghetti.webp" },
-        { id: 8, nama: "Balungan", harga: 5000, gambar: "balungan.webp" },
-        { id: 9, nama: "Es Teh Jumbo", harga: 3000, gambar: "esteh.webp" }
-        ,
-        { id: 10, nama: "Es Teh kecil", harga: 2000, gambar: "esteh.webp" }
+        // PENTING: Anda harus mengganti nilai barcode dengan barcode aktual produk Anda.
+        // Barcode ini adalah contoh format EAN-13.
+        { id: 1, nama: "Risol", harga: 3000, gambar: "risol.webp", barcode: "risol" },
+        { id: 2, nama: "Cibay", harga: 2500, gambar: "cibay.webp", barcode: "8997000000027" },
+        { id: 3, nama: "Citung", harga: 2500, gambar: "citung.webp", barcode: "8997000000034" },
+        { id: 4, nama: "Topokki", harga: 5000, gambar: "toppoki.webp", barcode: "8997000000041" },
+        { id: 5, nama: "Tteokbokki Besar", harga: 10000, gambar: "toppoki.webp", barcode: "8997000000058" },
+        { id: 6, nama: "Spaghetti", harga: 6000, gambar: "spaghetti.webp", barcode: "8997000000065" },
+        { id: 7, nama: "Spaghetti Besar", harga: 10000, gambar: "spaghetti.webp", barcode: "8997000000072" },
+        { id: 8, nama: "Balungan", harga: 5000, gambar: "balungan.webp", barcode: "8997000000089" },
+        { id: 9, nama: "Es Teh Jumbo", harga: 3000, gambar: "esteh.webp", barcode: "8997000000096" },
+        { id: 10, nama: "Es Teh kecil", harga: 2000, gambar: "esteh.webp", barcode: "8997000000102" }
     ];
 
     // --- REFERENSI DOM ---
@@ -55,6 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const printOrderFab = document.getElementById('print-order-fab');
     const addManualOrderFab = document.getElementById('add-manual-order-fab');
     const clearCartFab = document.getElementById('clear-cart-fab');
+    const scanBarcodeFab = document.getElementById('scan-barcode-fab');
     const pesanWhatsappBtn = document.getElementById('pesan-whatsapp');
     const namaPemesanInput = document.getElementById('nama-pemesan');
     const alamatPemesanInput = document.getElementById('alamat-pemesan');
@@ -65,15 +72,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const manualProductNameInput = document.getElementById('manualProductName');
     const manualProductPriceInput = document.getElementById('manualProductPrice');
     const manualProductQtyInput = document.getElementById('manualProductQty');
+    
+    // NEW: Referensi ke modal dan input barcode scanner (untuk pop-up)
+    const barcodeScannerModal = document.getElementById('barcodeScannerModal');
+    const barcodeInput = document.getElementById('barcodeInput');
+    const scanFeedback = document.getElementById('scan-feedback');
+    const submitBarcodeButton = document.getElementById('submitBarcodeButton');
 
     let keranjang = [];
     let nextManualItemId = 1000;
     let isNominalInputFocused = false;
+    // let scannerActive = false; // Tidak lagi digunakan
 
     // --- SETTING STRUK/WHATSAPP ---
     const defaultShopName = "HARINFOOD";
-    const defaultPhoneNumber = "6281235368643";
-    const defaultFooterText = "Terima Kasih!";
+    const displayPhoneNumber = "081235368643";
+    const whatsappPhoneNumber = "6281235368643";
+    const defaultAddress = "Jl Ender Rakit - Gedongan";
+    const defaultFooterText = "Terima kasih sehat selalu ya";
+    const qrisImagePath = "qris.webp";
 
     // --- UTILITAS FORMAT RUPIAH ---
     const formatRupiah = (number) => {
@@ -111,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
             produkList.appendChild(produkDiv);
         });
     }
+
     function updateProdukControls() {
         displayProduk();
     }
@@ -122,7 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const produkId = parseInt(btn.dataset.id);
 
         if (btn.classList.contains('add-to-cart-btn')) {
-            tambahKeKeranjang(produkId);
+            const product = produkData.find(p => p.id === produkId);
+            if (product) {
+                tambahKeKeranjang(product);
+            }
             return;
         }
         if (btn.classList.contains('plus-btn')) {
@@ -151,31 +172,39 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- TAMBAH KE KERANJANG ---
     function tambahKeKeranjang(produkSumber) {
         let productToAdd;
-        if (typeof produkSumber === 'number') {
-            productToAdd = produkData.find(p => p.id === produkSumber);
-            if (!productToAdd) return;
-            productToAdd = { ...productToAdd, qty: 1 };
-        } else {
+
+        if (produkSumber.isManual) {
             productToAdd = { ...produkSumber };
-        }
-
-        const existingItem = keranjang.find(
-            item => item.id === productToAdd.id && item.nama === productToAdd.nama
-        );
-
-        if (existingItem) {
-            existingItem.qty += productToAdd.qty;
         } else {
-            if (productToAdd.isManual) {
-                productToAdd.id = nextManualItemId++;
-            } else if (produkData.some(p => p.id === productToAdd.id)) {
-                // Biarkan ID asli
+            const existingItem = keranjang.find(item => {
+                if (!item.isManual && item.id === produkSumber.id) {
+                    return true;
+                }
+                if (produkSumber.barcode && item.barcode && item.barcode === produkSumber.barcode) {
+                    return true;
+                }
+                return false;
+            });
+
+            if (existingItem) {
+                existingItem.qty += (produkSumber.qty || 1);
+                updateKeranjang();
+                updateProdukControls();
+                return;
             } else {
-                productToAdd.id = nextManualItemId++;
-                productToAdd.isManual = true;
+                productToAdd = { ...produkSumber };
+                productToAdd.qty = produkSumber.qty || 1;
             }
-            keranjang.push(productToAdd);
         }
+
+        if (productToAdd.isManual && !productToAdd.hasOwnProperty('id')) {
+            productToAdd.id = nextManualItemId++;
+        } else if (!productToAdd.hasOwnProperty('id') && !productToAdd.barcode) {
+            productToAdd.id = nextManualItemId++;
+            productToAdd.isManual = true;
+        }
+        
+        keranjang.push(productToAdd);
         updateKeranjang();
         updateProdukControls();
     }
@@ -201,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
         keranjangTotal.textContent = formatRupiah(total);
-        const totalBelanjaNumeric = parseFloat(keranjangTotal.textContent.replace('Rp', '').replace(/\./g, '').replace(',', '.')) || 0;
+        const totalBelanjaNumeric = total;
         if (!isNominalInputFocused) {
             const currentNominalValueNumeric = parseFloat(nominalPembayaranInput.value) || 0;
             const isCurrentlyEmptyOrZero = nominalPembayaranInput.value === '' || currentNominalValueNumeric === 0;
@@ -301,55 +330,82 @@ document.addEventListener('DOMContentLoaded', () => {
         const formattedDate = tanggalWaktu.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
         const formattedTime = tanggalWaktu.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
-        const printWindow = window.open('', '_blank');
-        printWindow.document.write('<html><head><title>Struk Belanja</title>');
-        printWindow.document.write('<link rel="stylesheet" href="style.css">');
-        printWindow.document.write('</head><body>');
-        printWindow.document.write('<div id="print-area">');
-        printWindow.document.write('<div class="print-header">');
-        printWindow.document.write(`<h2>${defaultShopName}</h2>`);
-        printWindow.document.write(`<p>Telp: ${defaultPhoneNumber}</p>`);
-        printWindow.document.write('</div>');
-        printWindow.document.write('<div class="print-info">');
-        printWindow.document.write(`<p>Pelanggan: ${namaPemesan || '-'}</p>`);
-        printWindow.document.write(`<p>Alamat: ${alamatPemesan || '-'}</p>`);
-        printWindow.document.write(`<p>Tanggal: ${formattedDate}</p>`);
-        printWindow.document.write(`<p>Jam: ${formattedTime}</p>`);
-        printWindow.document.write('</div>');
+        const includeQris = confirm('Apakah Anda ingin menyertakan gambar QRIS pada struk?');
+
+        let printContent = `
+            <html>
+            <head>
+                <title>Struk Belanja</title>
+                <link rel="stylesheet" href="style.css">
+            </head>
+            <body>
+                <div id="print-area">
+                    <div class="print-header">
+                        <p class="shop-name-print">${defaultShopName}</p>
+                        <p class="shop-address-print">${defaultAddress}</p>
+                        <p class="shop-phone-print">${displayPhoneNumber}</p>
+                    </div>
+                    <div class="print-info">
+                        <p>Pelanggan: ${namaPemesan || '-'}</p>
+                        <p>Alamat: ${alamatPemesan || '-'}</p>
+                        <p>Tanggal: ${formattedDate}</p>
+                        <p>Jam: ${formattedTime}</p>
+                    </div>
+        `;
         if (keteranganPesanan) {
-            printWindow.document.write('<div class="print-notes">');
-            printWindow.document.write(`<p>Catatan: ${keteranganPesanan}</p>`);
-            printWindow.document.write('</div>');
+            printContent += `
+                    <div class="print-notes">
+                        <p>Catatan: ${keteranganPesanan}</p>
+                    </div>
+            `;
         }
-        printWindow.document.write('<hr>');
-        printWindow.document.write('<table><tbody>');
+        printContent += `
+                    <hr>
+                    <table><tbody>
+        `;
         keranjang.forEach(item => {
-            printWindow.document.write(`<tr><td>${item.nama} (${item.qty}x)</td><td style="text-align:right;">${formatRupiah(item.harga)}</td></tr>`);
+            printContent += `<tr><td>${item.nama} (${item.qty}x)</td><td style="text-align:right;">${formatRupiah(item.harga)}</td></tr>`;
         });
-        printWindow.document.write('</tbody></table>');
-        printWindow.document.write('<hr>');
-        printWindow.document.write('<p class="total-row"><span>TOTAL:</span> ' + keranjangTotal.textContent + '</p>');
-        printWindow.document.write('<p class="print-payment-info"><span>BAYAR:</span> ' + formatRupiah(nominalPembayaran) + '</p>');
-        printWindow.document.write('<p class="print-payment-info"><span>KEMBALIAN:</span> ' + formatRupiah(kembalian) + '</p>');
-        printWindow.document.write('<div style="text-align: center; margin-top: 10px; margin-bottom: 5px;">');
-        printWindow.document.write('<img src="qris.webp" alt="QRIS Code" style="width: 45mm; height: auto; display: block; margin: 0 auto;">');
-        printWindow.document.write('</div>');
-        printWindow.document.write(`<p class="thank-you">${defaultFooterText} - Scan QRIS Untuk Pembayaran</p>`);
-        printWindow.document.write('</div></body></html>');
+        printContent += `
+                    </tbody></table>
+                    <hr>
+                    <p class="total-row"><span>TOTAL:</span> ${keranjangTotal.textContent}</p>
+                    <p class="print-payment-info"><span>BAYAR:</span> ${formatRupiah(nominalPembayaran)}</p>
+                    <p class="print-payment-info"><span>KEMBALIAN:</span> ${formatRupiah(kembalian)}</p>
+        `;
+
+        if (includeQris) {
+            printContent += `
+                    <div style="text-align: center; margin-top: 10px; margin-bottom: 5px;">
+                        <img src="${qrisImagePath}" alt="QRIS Code" style="width: 45mm; height: auto; display: block; margin: 0 auto; padding-bottom: 5px;">
+                    </div>
+            `;
+            printContent += `<p class="thank-you">${defaultFooterText} - Scan QRIS Untuk Pembayaran</p>`;
+        } else {
+            printContent += `<p class="thank-you">${defaultFooterText}</p>`;
+        }
+
+        printContent += `</div></body></html>`;
+
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(printContent);
         printWindow.document.close();
+
         printWindow.focus();
+        
         setTimeout(() => {
             printWindow.print();
-        }, 500);
-        keranjang = [];
-        updateKeranjang();
-        updateProdukControls();
-        namaPemesanInput.value = '';
-        alamatPemesanInput.value = '';
-        keteranganPesananInput.value = '';
-        nominalPembayaranInput.value = 0;
-        document.getElementById('dibawa-pulang').checked = true;
-        hitungKembalian();
+            keranjang = [];
+            updateKeranjang();
+            updateProdukControls();
+            namaPemesanInput.value = '';
+            alamatPemesanInput.value = '';
+            keteranganPesananInput.value = '';
+            nominalPembayaranInput.value = 0;
+            document.getElementById('dibawa-pulang').checked = true;
+            hitungKembalian();
+        }, 300);
+
     });
 
     // --- PESAN WHATSAPP ---
@@ -377,7 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const formattedTime = tanggalWaktu.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
 
         let whatsappMessage = `*${defaultShopName}*\n`;
-        whatsappMessage += `Telp: ${defaultPhoneNumber}\n`;
+        whatsappMessage += `Telp: ${displayPhoneNumber}\n`;
         whatsappMessage += "-----------------------------\n";
         whatsappMessage += `Pelanggan: ${namaPemesan || '-'}\n`;
         whatsappMessage += `Alamat: ${alamatPemesan || '-'}\n`;
@@ -397,7 +453,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         whatsappMessage += defaultFooterText;
         const encodedMessage = encodeURIComponent(whatsappMessage);
-        const whatsappURL = `https://wa.me/${defaultPhoneNumber}?text=${encodedMessage}`;
+        const whatsappURL = `https://wa.me/${whatsappPhoneNumber}?text=${encodedMessage}`;
         window.open(whatsappURL, '_blank');
         alert('Struk telah disiapkan di WhatsApp. Silakan pilih kontak dan kirim!');
     });
@@ -431,13 +487,72 @@ document.addEventListener('DOMContentLoaded', () => {
         closeManualOrderModal();
     };
 
+    // --- NEW: BARCODE SCANNER EKSTERNAL (dengan pop-up) ---
+
+    // Event listener untuk FAB Scan Barcode -> buka modal
+    scanBarcodeFab.addEventListener('click', () => {
+        barcodeScannerModal.style.display = 'flex';
+        barcodeInput.value = ''; // Bersihkan input
+        scanFeedback.textContent = 'Siap menerima barcode...';
+        barcodeInput.focus(); // Fokuskan input di dalam modal
+    });
+
+    // Fungsi untuk menutup modal barcode
+    window.closeBarcodeScannerModal = function() {
+        barcodeScannerModal.style.display = 'none';
+        barcodeInput.blur(); // Hapus fokus dari input
+        barcodeInput.value = ''; // Pastikan input bersih
+    };
+
+    // Event listener untuk tombol "Tambahkan" di modal barcode
+    submitBarcodeButton.addEventListener('click', () => {
+        const scannedBarcode = barcodeInput.value.trim();
+        if (scannedBarcode) {
+            processScannedBarcode(scannedBarcode);
+        } else {
+            scanFeedback.textContent = 'Barcode tidak boleh kosong.';
+        }
+    });
+
+    // Event listener untuk Enter di input barcode modal (untuk scanner hardware)
+    barcodeInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault(); // Mencegah form submit
+            const scannedBarcode = barcodeInput.value.trim();
+            if (scannedBarcode) {
+                processScannedBarcode(scannedBarcode);
+            } else {
+                scanFeedback.textContent = 'Barcode tidak boleh kosong.';
+            }
+        }
+    });
+
+    // Fungsi untuk memproses barcode yang discan (sama seperti sebelumnya)
+    function processScannedBarcode(barcode) {
+        console.log("Processing scanned barcode:", barcode);
+        const foundProduct = produkData.find(p => p.barcode === barcode);
+
+        if (foundProduct) {
+            tambahKeKeranjang(foundProduct);
+            scanFeedback.textContent = `Produk "${foundProduct.nama}" ditambahkan!`;
+            barcodeInput.value = ''; // Bersihkan input setelah berhasil
+            barcodeInput.focus(); // Fokuskan kembali untuk scan berikutnya
+            // Optional: Close modal after successful scan if you prefer one scan at a time
+            // setTimeout(() => { closeBarcodeScannerModal(); }, 500);
+        } else {
+            scanFeedback.textContent = `Barcode ${barcode} tidak ditemukan di katalog. Coba lagi.`;
+            barcodeInput.value = ''; // Bersihkan input agar bisa coba lagi
+            barcodeInput.focus(); // Fokuskan kembali
+        }
+    }
+
     // --- INISIALISASI APP ---
     displayProduk();
     updateKeranjang();
     hitungKembalian();
     manualOrderModal.style.display = 'none';
+    // barcodeScannerInput.focus(); // Hapus baris ini
 });
-// ...kode-kode fungsi lain...
 
 // Fungsi hidePilihanMakan:
 function hidePilihanMakan() {
@@ -453,7 +568,4 @@ function hidePilihanMakan() {
     });
 }
 
-// Jalankan saat halaman sudah siap
 document.addEventListener('DOMContentLoaded', hidePilihanMakan);
-
-// -- kode lain (misal event listener global, dsb) --
