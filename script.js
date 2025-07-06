@@ -44,6 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 7, nama: "Spaghetti Besar", harga: 10000, gambar: "spaghetti.webp" },
         { id: 8, nama: "Balungan", harga: 5000, gambar: "balungan.webp" },
         { id: 9, nama: "Es Teh Jumbo", harga: 3000, gambar: "esteh.webp" }
+        ,
+        { id: 10, nama: "Es Teh kecil", harga: 2000, gambar: "esteh.webp" }
     ];
 
     // --- REFERENSI DOM ---
