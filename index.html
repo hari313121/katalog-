@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Katalog HARINFOOD</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <!-- Modal Nama Pemesan -->
 <div id="namaPemesanModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); align-items:center; justify-content:center;">
@@ -16,77 +18,66 @@
   </div>
 </div>
 <body>
-    <header>
-        </header>
-
+    <header></header>
     <div class="main-layout">
         <section id="menu-produk-section">
             <h2 class="section-title">Daftar Menu HARINFOOD</h2>
-            <div id="produk-list" class="produk-grid">
-                </div>
+            <div id="produk-list" class="produk-grid"></div>
         </section>
-
         <section id="keranjang-form-section">
             <h2 class="section-title">Keranjang Belanja</h2>
-            
             <table class="keranjang-table">
                 <thead>
                     <tr>
                         <th>Produk</th>
                         <th>Qty</th>
                         <th>Harga</th>
-                        <th></th> </tr>
+                        <th></th>
+                    </tr>
                 </thead>
                 <tbody id="keranjang-items">
                     <tr><td colspan="4" class="empty-cart-message">Keranjang kosong.</td></tr>
                 </tbody>
             </table>
-            
             <p class="keranjang-total-display">Total: <span id="keranjang-total">Rp 0</span></p>
-            
             <div class="pembayaran-section-inline">
                 <label for="nominal-pembayaran">Nominal Pembayaran:</label>
                 <input type="number" id="nominal-pembayaran" min="0" value="0">
                 <p>Kembalian: <span id="kembalian-display">Rp 0</span></p>
             </div>
-
-            <button id="clear-keranjang" class="btn-action btn-clear">Bersihkan Keranjang</button>
-
+            <!-- <button id="clear-keranjang" class="btn-action btn-clear">Bersihkan Keranjang</button> -->
             <div class="pemesanan-container">
                 <h2 class="section-title">Detail Pemesanan</h2>
                 <label for="nama-pemesan">Nama Pemesan:</label>
                 <input type="text" id="nama-pemesan" required>
-
                 <label for="alamat-pemesan">Alamat Lengkap:</label>
                 <textarea id="alamat-pemesan" rows="3" required></textarea>
-
                 <label for="keterangan-pesanan">Keterangan Pesanan (Opsional):</label>
                 <textarea id="keterangan-pesanan" rows="2"></textarea>
-
-                <label style="color:white; font-size:10px;font-style: italic;";>Silahkan memesan dengan menekan tombol di bawah !</label>
+                <label style="color:white; font-size:10px;font-style: italic;">Silahkan memesan dengan menekan tombol di bawah !</label>
                 <input type="radio" id="dibawa-pulang" name="opsi-makan" value="Dibawa Pulang">
                 <label for="dibawa-pulang">Dibawa Pulang</label>
                 <input type="radio" id="makan-disini" name="opsi-makan" value="Makan di Sini" checked>
                 <label for="makan-disini">Makan di Sini</label>
-
                 <div class="action-buttons">
                     <button id="pesan-whatsapp" class="btn-action btn-whatsapp"><i class="fab fa-whatsapp"></i> TEKAN UNTUK MEMESAN</button>
                 </div>
             </div>
         </section>
     </div>
-
     <footer>
         <p>&copy; 2025 HARINFOOD. All Rights Reserved.</p>
     </footer>
-
-    <div class="fab-button fab-manual" id="add-manual-order-fab">
+    <!-- Floating Action Buttons -->
+    <div class="fab-button fab-manual" id="add-manual-order-fab" title="Tambah Pesanan Manual">
         <i class="fas fa-shopping-basket"></i>
     </div>
-    <div class="fab-button fab-print" id="print-order-fab">
+    <div class="fab-button fab-clear" id="clear-cart-fab" title="Bersihkan Keranjang">
+        <i class="fas fa-trash"></i>
+    </div>
+    <div class="fab-button fab-print" id="print-order-fab" title="Cetak Struk">
         <i class="fas fa-print"></i>
     </div>
-
     <div id="manualOrderModal" class="modal">
         <div class="modal-content">
             <span class="close-button" onclick="closeManualOrderModal()">&times;</span>
@@ -100,7 +91,6 @@
             <button onclick="addManualOrderItem()">Tambahkan ke Keranjang</button>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>

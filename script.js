@@ -1,9 +1,5 @@
-// ===============================
-// KATALOG HARINFOOD - script.js
-// ===============================
-
 document.addEventListener('DOMContentLoaded', () => {
-    // --- MODAL NAMA PEMESAN ---
+    // ... (bagian MODAL NAMA PEMESAN sama seperti sebelumnya) ...
     function getNamaPemesan() {
         return localStorage.getItem('namaPemesan') || '';
     }
@@ -21,7 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
             namaPemesanInput.value = nama;
         }
     }
-
     if (!localStorage.getItem('namaPemesan')) {
         tampilkanModalNamaPemesan();
     } else {
@@ -55,9 +50,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const produkList = document.getElementById('produk-list');
     const keranjangItems = document.getElementById('keranjang-items');
     const keranjangTotal = document.getElementById('keranjang-total');
-    const clearKeranjangBtn = document.getElementById('clear-keranjang');
     const printOrderFab = document.getElementById('print-order-fab');
     const addManualOrderFab = document.getElementById('add-manual-order-fab');
+    const clearCartFab = document.getElementById('clear-cart-fab');
     const pesanWhatsappBtn = document.getElementById('pesan-whatsapp');
     const namaPemesanInput = document.getElementById('nama-pemesan');
     const alamatPemesanInput = document.getElementById('alamat-pemesan');
@@ -69,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const manualProductPriceInput = document.getElementById('manualProductPrice');
     const manualProductQtyInput = document.getElementById('manualProductQty');
 
-    let keranjang = []; // Array item di keranjang
+    let keranjang = [];
     let nextManualItemId = 1000;
     let isNominalInputFocused = false;
 
@@ -91,7 +86,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayProduk() {
         produkList.innerHTML = '';
         produkData.forEach(produk => {
-            // Cari qty di keranjang
             let itemInCart = keranjang.find(item => item.id === produk.id && !item.isManual);
             let qty = itemInCart ? itemInCart.qty : 0;
             const produkDiv = document.createElement('div');
@@ -125,12 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!btn) return;
         const produkId = parseInt(btn.dataset.id);
 
-        // Tombol tambah (+) awal
         if (btn.classList.contains('add-to-cart-btn')) {
             tambahKeKeranjang(produkId);
             return;
         }
-        // Tombol + qty
         if (btn.classList.contains('plus-btn')) {
             const itemInCart = keranjang.find(item => item.id === produkId && !item.isManual);
             if (itemInCart) {
@@ -140,7 +132,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             return;
         }
-        // Tombol - qty
         if (btn.classList.contains('minus-btn')) {
             const itemInCart = keranjang.find(item => item.id === produkId && !item.isManual);
             if (itemInCart) {
@@ -207,10 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 keranjangItems.appendChild(row);
             });
         }
-
         keranjangTotal.textContent = formatRupiah(total);
-
-        // Otomatis isi nominal pembayaran
         const totalBelanjaNumeric = parseFloat(keranjangTotal.textContent.replace('Rp', '').replace(/\./g, '').replace(',', '.')) || 0;
         if (!isNominalInputFocused) {
             const currentNominalValueNumeric = parseFloat(nominalPembayaranInput.value) || 0;
@@ -247,8 +235,8 @@ document.addEventListener('DOMContentLoaded', () => {
         updateProdukControls();
     };
 
-    // --- BERSIHKAN KERANJANG ---
-    clearKeranjangBtn.addEventListener('click', () => {
+    // --- FAB CLEAR KERANJANG (MERAH) ---
+    clearCartFab.addEventListener('click', () => {
         keranjang = [];
         updateKeranjang();
         updateProdukControls();
@@ -316,54 +304,41 @@ document.addEventListener('DOMContentLoaded', () => {
         printWindow.document.write('<link rel="stylesheet" href="style.css">');
         printWindow.document.write('</head><body>');
         printWindow.document.write('<div id="print-area">');
-
         printWindow.document.write('<div class="print-header">');
         printWindow.document.write(`<h2>${defaultShopName}</h2>`);
         printWindow.document.write(`<p>Telp: ${defaultPhoneNumber}</p>`);
         printWindow.document.write('</div>');
-
         printWindow.document.write('<div class="print-info">');
         printWindow.document.write(`<p>Pelanggan: ${namaPemesan || '-'}</p>`);
         printWindow.document.write(`<p>Alamat: ${alamatPemesan || '-'}</p>`);
         printWindow.document.write(`<p>Tanggal: ${formattedDate}</p>`);
         printWindow.document.write(`<p>Jam: ${formattedTime}</p>`);
         printWindow.document.write('</div>');
-
         if (keteranganPesanan) {
             printWindow.document.write('<div class="print-notes">');
             printWindow.document.write(`<p>Catatan: ${keteranganPesanan}</p>`);
             printWindow.document.write('</div>');
         }
-
         printWindow.document.write('<hr>');
-
         printWindow.document.write('<table><tbody>');
         keranjang.forEach(item => {
             printWindow.document.write(`<tr><td>${item.nama} (${item.qty}x)</td><td style="text-align:right;">${formatRupiah(item.harga)}</td></tr>`);
         });
         printWindow.document.write('</tbody></table>');
-
         printWindow.document.write('<hr>');
-
         printWindow.document.write('<p class="total-row"><span>TOTAL:</span> ' + keranjangTotal.textContent + '</p>');
         printWindow.document.write('<p class="print-payment-info"><span>BAYAR:</span> ' + formatRupiah(nominalPembayaran) + '</p>');
         printWindow.document.write('<p class="print-payment-info"><span>KEMBALIAN:</span> ' + formatRupiah(kembalian) + '</p>');
-
-        // QRIS
         printWindow.document.write('<div style="text-align: center; margin-top: 10px; margin-bottom: 5px;">');
         printWindow.document.write('<img src="qris.webp" alt="QRIS Code" style="width: 45mm; height: auto; display: block; margin: 0 auto;">');
         printWindow.document.write('</div>');
         printWindow.document.write(`<p class="thank-you">${defaultFooterText} - Scan QRIS Untuk Pembayaran</p>`);
         printWindow.document.write('</div></body></html>');
-
         printWindow.document.close();
         printWindow.focus();
-
         setTimeout(() => {
             printWindow.print();
         }, 500);
-
-        // Reset keranjang dan form setelah cetak
         keranjang = [];
         updateKeranjang();
         updateProdukControls();
@@ -408,27 +383,20 @@ document.addEventListener('DOMContentLoaded', () => {
         whatsappMessage += `Jam: ${formattedTime}\n`;
         whatsappMessage += "-----------------------------\n";
         whatsappMessage += "*Detail Pesanan:*\n";
-
         keranjang.forEach(item => {
             whatsappMessage += `- ${item.nama} (${item.qty}x) ${formatRupiah(item.harga)}\n`;
         });
-
         whatsappMessage += "-----------------------------\n";
         whatsappMessage += `*Total: ${keranjangTotal.textContent}*\n`;
         whatsappMessage += `*Bayar: ${formatRupiah(nominalPembayaran)}*\n`;
         whatsappMessage += `*Kembalian: ${formatRupiah(kembalian)}*\n\n`;
-
         if (keteranganPesanan) {
             whatsappMessage += `*Catatan:*\n${keteranganPesanan}\n\n`;
         }
-
         whatsappMessage += defaultFooterText;
-
         const encodedMessage = encodeURIComponent(whatsappMessage);
         const whatsappURL = `https://wa.me/${defaultPhoneNumber}?text=${encodedMessage}`;
-
         window.open(whatsappURL, '_blank');
-
         alert('Struk telah disiapkan di WhatsApp. Silakan pilih kontak dan kirim!');
     });
 
@@ -439,21 +407,17 @@ document.addEventListener('DOMContentLoaded', () => {
         manualProductPriceInput.value = '';
         manualProductQtyInput.value = '1';
     });
-
     window.closeManualOrderModal = function() {
         manualOrderModal.style.display = 'none';
     };
-
     window.addManualOrderItem = function() {
         const name = manualProductNameInput.value.trim();
         const price = parseFloat(manualProductPriceInput.value);
         const qty = parseInt(manualProductQtyInput.value);
-
         if (!name || isNaN(price) || price <= 0 || isNaN(qty) || qty <= 0) {
             alert('Mohon lengkapi semua bidang dengan nilai yang valid (harga & kuantitas harus positif).');
             return;
         }
-
         const manualProduct = {
             id: nextManualItemId++,
             nama: name,
@@ -461,7 +425,6 @@ document.addEventListener('DOMContentLoaded', () => {
             qty: qty,
             isManual: true
         };
-
         tambahKeKeranjang(manualProduct);
         closeManualOrderModal();
     };
@@ -471,44 +434,24 @@ document.addEventListener('DOMContentLoaded', () => {
     updateKeranjang();
     hitungKembalian();
     manualOrderModal.style.display = 'none';
-
-    // --- SEMBUNYIKAN PILIHAN MAKAN JIKA PERLU ---
-    function hidePilihanMakan() {
-        const opsiIds = [
-            { id: "dibawa-pulang", labelText: "Dibawa Pulang" },
-            { id: "makan-disini", labelText: "Makan di Sini" }
-        ];
-        opsiIds.forEach(opsi => {
-            const radio = document.getElementById(opsi.id);
-            if (radio) {
-                radio.style.display = 'none';
-            }
-            const label = document.querySelector(`label[for='${opsi.id}']`);
-            if (label) {
-                label.style.display = 'none';
-            }
-        });
-    }
-    //document.addEventListener('DOMContentLoaded', hidePilihanMakan);
 });
+// ...kode-kode fungsi lain...
+
+// Fungsi hidePilihanMakan:
 function hidePilihanMakan() {
     const opsiIds = [
         { id: "dibawa-pulang", labelText: "Dibawa Pulang" },
         { id: "makan-disini", labelText: "Makan di Sini" }
     ];
     opsiIds.forEach(opsi => {
-        // Sembunyikan radio button
         const radio = document.getElementById(opsi.id);
-        if (radio) {
-            radio.style.display = 'none';
-            // radio.disabled = true; // Jika ingin tetap terlihat tapi tidak bisa dipilih
-        }
-        // Sembunyikan label terkait
+        if (radio) radio.style.display = 'none';
         const label = document.querySelector(`label[for='${opsi.id}']`);
-        if (label) {
-            label.style.display = 'none';
-        }
+        if (label) label.style.display = 'none';
     });
 }
 
+// Jalankan saat halaman sudah siap
 document.addEventListener('DOMContentLoaded', hidePilihanMakan);
+
+// -- kode lain (misal event listener global, dsb) --
