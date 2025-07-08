@@ -1,5 +1,11 @@
+/* Import font Poppins dan Robote Mono (sudah ada) */
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800;900&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+/* Font untuk judul login */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@700;900&display=swap');
+
 
 /* ====== Variabel Utama ====== */
 :root {
@@ -12,12 +18,15 @@
     --text-price-color: #ffcc00;
     --button-default-bg: linear-gradient(45deg, #00f0ff, #00b0ff);
     --button-clear-bg: linear-gradient(45deg, #ff4d4d, #ff8c8c);
-    --button-whatsapp-bg: linear-gradient(45deg, #25D366, #128C7E);
+    --button-whatsapp-bg: linear-gradient(45deg, #25D366, #128C7E); /* Variabel ini sudah ada */
     --button-manual-bg: linear-gradient(45deg, #8a2be2, #4b0082);
     --input-border-color: #00f0ff;
     --input-bg: rgba(255, 255, 255, 0.1);
     --table-header-bg: rgba(255, 255, 255, 0.1);
     --danger-color: #dc3545;
+    --btn-qris-bg: linear-gradient(45deg, #007bff, #00b0ff); /* Biru untuk QRIS */
+    --btn-tunai-bg: linear-gradient(45deg, #ffc107, #e0a800); /* Kuning untuk Tunai */
+    --btn-print-green-bg: linear-gradient(45deg, #28a745, #1e7e34); /* Hijau untuk cetak */
 }
 
 /* ====== Global ====== */
@@ -85,6 +94,312 @@ footer {
     font-size: 2em;
 }
 
+/* ====== Gaya untuk Pop-up Login (Juga digunakan untuk Pop-up Cetak) ====== */
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10000;
+    background-image: url('citung.webp'); /* Background gambar untuk login page */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.popup-content {
+    background: radial-gradient(circle at top left, #1a1a2e, #16213e);
+    padding: 40px 50px;
+    border-radius: 20px;
+    text-align: center;
+    box-shadow: 0 15px 50px rgba(0, 240, 255, 0.4);
+    border: 3px solid var(--border-neon-color);
+    width: 90%;
+    max-width: 480px;
+    color: var(--text-primary-color);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efek glow tambahan */
+.popup-content::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(transparent, rgba(0, 240, 255, 0.1), transparent);
+    animation: rotateGlow 15s linear infinite;
+    z-index: -1;
+    opacity: 0.8;
+}
+
+@keyframes rotateGlow {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+
+.login-title {
+    font-family: 'Montserrat', sans-serif;
+    font-weight: 900;
+    font-size: 2.2em; /* Ukuran font diperkecil */
+    margin-bottom: 30px;
+    color: var(--text-accent-color);
+    text-shadow: 0 0 20px var(--shadow-neon-color), 0 0 30px rgba(0, 240, 255, 0.7);
+    letter-spacing: 2px;
+    background: linear-gradient(45deg, #00f0ff, #00b0ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+
+.button-group {
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.login-choice-btn {
+    padding: 15px 35px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.2em;
+    font-weight: 700;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    display: flex; /* Untuk memusatkan konten jika ada ikon/teks */
+    justify-content: center;
+    align-items: center;
+}
+
+.login-choice-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.login-choice-btn::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.login-choice-btn:hover::after {
+    opacity: 1;
+}
+
+#btn-pelanggan {
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    color: white;
+}
+
+#btn-pelanggan:hover {
+    background: linear-gradient(45deg, #0056b3, #003d80);
+}
+
+#btn-kasir {
+    background: linear-gradient(45deg, #28a745, #1e7e34);
+    color: white;
+}
+
+#btn-kasir:hover {
+    background: linear-gradient(45deg, #1e7e34, #155724);
+}
+
+.popup-content form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.popup-content form label {
+    display: block;
+    text-align: left;
+    color: var(--text-accent-color);
+    font-weight: 600;
+    font-size: 1em;
+    text-shadow: 0 0 5px rgba(0, 240, 255, 0.2);
+}
+
+.popup-content form input[type="text"],
+.popup-content form input[type="password"] {
+    width: calc(100% - 28px);
+    padding: 14px;
+    border-radius: 10px;
+    border: 2px solid var(--border-neon-color);
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text-primary-color);
+    font-size: 1.1em;
+    box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    caret-color: var(--text-accent-color);
+}
+
+.popup-content form input[type="text"]:focus,
+.popup-content form input[type="password"]:focus {
+    outline: none;
+    border-color: #00ffff;
+    box-shadow: 0 0 20px var(--shadow-neon-color), inset 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.submit-login-btn {
+    background: linear-gradient(45deg, #6c757d, #5a6268);
+    color: white;
+    padding: 14px 30px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 700;
+    margin-top: 15px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.submit-login-btn:hover {
+    background: linear-gradient(45deg, #5a6268, #495057);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(108, 117, 125, 0.5);
+}
+
+/* ===== Payment Options Styling ===== */
+.payment-options {
+    display: flex; 
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 1.5em;
+    justify-content: center;
+    padding-top: 1em;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-payment {
+    flex: 1 1 calc(50% - 10px);
+    max-width: 200px;
+    color: white;
+    border: none;
+    padding: 0.8em 1em;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+}
+
+.btn-payment i {
+    font-size: 1.2em;
+}
+
+.btn-payment:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.btn-tunai {
+    background: var(--btn-tunai-bg);
+}
+
+.btn-tunai:hover {
+    background: linear-gradient(45deg, #ffdc81, #fcc200);
+}
+
+.btn-qris {
+    background: var(--btn-qris-bg);
+}
+
+.btn-qris:hover {
+    background: linear-gradient(45deg, #00aaff, #007bff);
+}
+
+/* Gaya spesifik untuk tombol WhatsApp */
+#pesan-whatsapp-pelanggan.btn-whatsapp {
+    background: var(--button-whatsapp-bg); /* Menggunakan variabel warna hijau WhatsApp */
+    color: white; /* Pastikan teksnya putih agar kontras */
+}
+
+#pesan-whatsapp-pelanggan.btn-whatsapp:hover {
+    background: linear-gradient(45deg, #128C7E, #25D366); /* Sedikit perubahan warna saat hover */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
+}
+
+
+/* ====== Keterangan Section Styling ====== */
+#keterangan-section {
+    padding-top: 1em;
+    margin-top: 1em;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+}
+
+#keterangan-section label {
+    display: block;
+    margin-bottom: 0.5em;
+    color: var(--text-accent-color);
+}
+
+#keterangan-section textarea {
+    width: calc(100% - 20px);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--input-border-color);
+    background: var(--input-bg);
+    color: var(--text-primary-color);
+    font-size: 1em;
+    resize: vertical;
+}
+
+#keterangan-section textarea:focus {
+    outline: none;
+    border-color: var(--border-neon-color);
+    box-shadow: 0 0 10px var(--shadow-neon-color);
+}
+
+/* ====== Gaya untuk Tombol Cetak Struk (Hijau) ====== */
+/* Menggunakan kelas 'btn-action' dan 'btn-print-green' */
+.btn-action.btn-print-green {
+    background: var(--btn-print-green-bg); /* Menggunakan variabel warna hijau */
+    color: white;
+    /* Properti lain seperti padding, border-radius, font-size sudah diwarisi dari .btn-action */
+}
+
+.btn-action.btn-print-green:hover {
+    background: linear-gradient(45deg, #218838, #155724); /* Warna hijau yang sedikit lebih gelap saat hover */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+
 /* ====== Katalog Produk ====== */
 #produk-list {
     display: grid;
@@ -135,6 +450,43 @@ footer {
     color: var(--text-price-color);
     margin-top: 0.2em;
 }
+
+/* Gaya BARU untuk input harga di produk-item */
+.produk-item .edit-price-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Pusatkan jika hanya satu item di dalamnya */
+    gap: 5px;
+    margin-top: 0.2em;
+    font-size: 0.9em; /* Ukuran font sama dengan harga biasa */
+    font-weight: bold;
+    color: var(--text-price-color); /* Warna teks harga */
+}
+
+.produk-item .product-price-input {
+    width: 80px; /* Lebar input yang sesuai */
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid var(--input-border-color);
+    background: var(--input-bg);
+    color: var(--text-price-color); /* Warna teks di input */
+    font-size: 1em; /* Sesuaikan ukuran font */
+    text-align: right; /* Angka rata kanan */
+    -moz-appearance: textfield; /* Sembunyikan panah di Firefox */
+}
+
+.produk-item .product-price-input::-webkit-outer-spin-button,
+.produk-item .product-price-input::-webkit-inner-spin-button {
+    -webkit-appearance: none; /* Sembunyikan panah di Chrome/Safari */
+    margin: 0;
+}
+
+.produk-item .product-price-input:focus {
+    outline: none;
+    border-color: var(--border-neon-color);
+    box-shadow: 0 0 10px var(--shadow-neon-color);
+}
+
 
 /* ====== Qty Control di Katalog ====== */
 .produk-controls {
@@ -398,37 +750,48 @@ footer {
     transform: scale(1.1) translateY(-2px);
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
 }
-.fab-print {
-    bottom: 30px;
+
+/* Gaya untuk FAB Share (Merah) */
+#kasir-fabs .fab-share {
+    bottom: 310px; /* Sesuaikan posisi agar tidak tumpang tindih dengan FAB lain */
     right: 30px;
-    background: var(--button-default-bg);
+    background: linear-gradient(45deg, #dc3545, #c82333); /* Merah */
 }
-.fab-clear {
-    bottom: 100px;
-    right: 30px;
-    background: var(--button-clear-bg);
-}
-.fab-clear:hover {
-    background: linear-gradient(45deg, #c0392b, #ff4d4d);
-}
-.fab-manual {
-    bottom: 170px;
-    right: 30px;
-    background: var(--button-manual-bg);
-}
-.fab-manual:hover {
-    background: linear-gradient(45deg, #4b0082, #8a2be2);
+#kasir-fabs .fab-share:hover {
+    background: linear-gradient(45deg, #c82333, #dc3545);
 }
 
-/* Barcode Scan FAB */
-.fab-barcode {
+/* Posisi FAB di dalam div #kasir-fabs */
+#kasir-fabs .fab-barcode {
     bottom: 240px; /* Adjust position based on your existing FABs */
     right: 30px;
     background: linear-gradient(45deg, #007bff, #0056b3); /* Blue color for barcode */
 }
-.fab-barcode:hover {
+#kasir-fabs .fab-barcode:hover {
     background: linear-gradient(45deg, #0056b3, #007bff);
 }
+#kasir-fabs .fab-manual {
+    bottom: 170px;
+    right: 30px;
+    background: var(--button-manual-bg);
+}
+#kasir-fabs .fab-manual:hover {
+    background: linear-gradient(45deg, #4b0082, #8a2be2);
+}
+#kasir-fabs .fab-clear {
+    bottom: 100px;
+    right: 30px;
+    background: var(--button-clear-bg);
+}
+#kasir-fabs .fab-clear:hover {
+    background: linear-gradient(45deg, #c0392b, #ff4d4d);
+}
+#kasir-fabs .fab-print {
+    bottom: 30px;
+    right: 30px;
+    background: var(--button-default-bg);
+}
+
 
 /* ====== Modal ====== */
 .modal {
@@ -502,7 +865,7 @@ footer {
     background-color: #218838;
 }
 
-/* NEW/REVISED: Barcode Scanner Modal Specific Styles (previously for Quagga, now for input) */
+/* Barcode Scanner Modal Specific Styles */
 #barcodeScannerModal .modal-content {
     background-color: #222; /* Darker background for scanner */
     color: var(--text-primary-color);
@@ -519,29 +882,6 @@ footer {
     color: var(--text-accent-color);
 }
 
-/* HAPUS: Gaya interaktif viewport QuaggaJS
-#interactive.viewport {
-    position: relative;
-    width: 100%;
-    height: 200px;
-    overflow: hidden;
-    border: 2px solid var(--border-neon-color);
-    border-radius: 8px;
-    background-color: black;
-    margin-bottom: 1em;
-}
-
-#interactive.viewport canvas,
-#interactive.viewport video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-*/
-
 .scan-feedback {
     text-align: center;
     font-size: 0.9em;
@@ -550,20 +890,6 @@ footer {
     margin-top: 0.5em; /* Add some space */
 }
 
-/* HAPUS: Input tersembunyi sebelumnya */
-/*
-.hidden-scanner-input {
-    position: absolute;
-    left: -9999px;
-    width: 1px;
-    height: 1px;
-    opacity: 0;
-    pointer-events: none;
-    overflow: hidden;
-}
-*/
-
-
 /* ====== RESPONSIVE GRID PRODUK & LAYOUT ====== */
 
 /* Default (PC/tablet besar): 3 kolom */
@@ -571,7 +897,7 @@ footer {
     grid-template-columns: repeat(3, 1fr);
 }
 
-/* Tablet (≤1024px): tetap 3 kolom */
+/* Tablet (≤1024px): */
 @media (max-width: 1024px) {
     .main-layout {
         grid-template-columns: 1fr 1fr;
@@ -590,11 +916,12 @@ footer {
         height: 50px;
         font-size: 1.3em;
     }
-    .fab-manual { bottom: 135px; right: 15px; }
-    .fab-clear  { bottom: 75px; right: 15px; }
-    .fab-print  { bottom: 15px; right: 15px; }
-    .fab-barcode { bottom: 195px; right: 15px; }
-    /* HAPUS: #interactive.viewport { height: 180px; } */
+    /* Posisi FAB di dalam div #kasir-fabs pada ukuran kecil */
+    #kasir-fabs .fab-share { bottom: 255px; right: 15px; } /* Sesuaikan untuk tablet */
+    #kasir-fabs .fab-barcode { bottom: 195px; right: 15px; } /* Sesuaikan untuk tablet */
+    #kasir-fabs .fab-manual { bottom: 135px; right: 15px; }
+    #kasir-fabs .fab-clear  { bottom: 75px; right: 15px; }
+    #kasir-fabs .fab-print  { bottom: 15px; right: 15px; }
 }
 
 /* HP (≤768px): produk 2 kolom */
@@ -614,16 +941,18 @@ footer {
     .produk-item img {
         height: auto;
     }
+    .section-title { font-size: 1.1em; }
     .fab-button {
         width: 45px;
         height: 45px;
         font-size: 1em;
     }
-    .fab-manual { bottom: 100px; right: 10px; }
-    .fab-clear  { bottom: 55px; right: 10px; }
-    .fab-print  { bottom: 10px; right: 10px; }
-    .fab-barcode { bottom: 145px; right: 10px; }
-    /* HAPUS: #interactive.viewport { height: 150px; } */
+    /* Posisi FAB di dalam div #kasir-fabs pada ukuran sangat kecil */
+    #kasir-fabs .fab-share { bottom: 185px; right: 10px; } /* Sesuaikan untuk HP */
+    #kasir-fabs .fab-barcode { bottom: 145px; right: 10px; } /* Sesuaikan untuk HP */
+    #kasir-fabs .fab-manual { bottom: 100px; right: 10px; }
+    #kasir-fabs .fab-clear  { bottom: 55px; right: 10px; }
+    #kasir-fabs .fab-print  { bottom: 10px; right: 10px; }
 }
 
 /* HP sangat kecil (≤480px): produk 2 kolom */
@@ -644,11 +973,12 @@ footer {
         height: 36px;
         font-size: 0.8em;
     }
-    .fab-manual { bottom: 78px; right: 7px; }
-    .fab-clear  { bottom: 43px; right: 7px; }
-    .fab-print  { bottom: 7px;  right: 7px; }
-    .fab-barcode { bottom: 113px; right: 7px; }
-    /* HAPUS: #interactive.viewport { height: 120px; } */
+    /* Posisi FAB di dalam div #kasir-fabs pada ukuran ekstra kecil */
+    #kasir-fabs .fab-share { bottom: 148px; right: 7px; } /* Sesuaikan untuk HP kecil */
+    #kasir-fabs .fab-barcode { bottom: 113px; right: 7px; } /* Sesuaikan untuk HP kecil */
+    #kasir-fabs .fab-manual { bottom: 78px; right: 7px; }
+    #kasir-fabs .fab-clear  { bottom: 43px; right: 7px; }
+    #kasir-fabs .fab-print  { bottom: 7px;  right: 7px; }
 }
 
 /* ====== PRINT STRUK ====== */

@@ -1,47 +1,50 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- MODAL NAMA PEMESAN ---
-    function getNamaPemesan() {
-        return localStorage.getItem('namaPemesan') || '';
-    }
+    // --- REFERENSI DOM UTAMA ---
+    const loginPopup = document.getElementById('login-popup');
+    const btnPelanggan = document.getElementById('btn-pelanggan');
+    const btnKasir = document.getElementById('btn-kasir');
+    const formPelanggan = document.getElementById('form-pelanggan');
+    const formKasir = document.getElementById('form-kasir');
+    const namaPelangganLoginInput = document.getElementById('nama-pelanggan-login');
+    const alamatPelangganLoginInput = document.getElementById('alamat-pelanggan-login');
+    const namaKasirLoginInput = document.getElementById('nama-kasir-login');
+    const passwordKasirLoginInput = document.getElementById('password-kasir-login');
+    const appContainer = document.getElementById('app-container');
+    const kasirFabs = document.getElementById('kasir-fabs'); // Container untuk FABs kasir
+    const pesanInfoLabel = document.getElementById('pesan-info-label');
+    const paymentChoiceButtons = document.getElementById('payment-choice-buttons'); // Container opsi pembayaran (Tombol 'Pesan' dan QRIS)
+    const pesanWhatsappPelangganBtn = document.getElementById('pesan-whatsapp-pelanggan'); // Tombol Pesan (WhatsApp) untuk pelanggan
+    const cetakStrukButton = document.getElementById('cetak-struk-button'); // Tombol Cetak Struk (untuk kasir)
+    const namaPemesanInput = document.getElementById('nama-pemesan');
+    const alamatPemesanInput = document.getElementById('alamat-pemesan');
+    const keteranganPesananInput = document.getElementById('keterangan-pesanan'); // Keterangan pesanan
+    const nominalPembayaranInput = document.getElementById('nominal-pembayaran');
+    const kembalianDisplay = document.getElementById('kembalian-display');
+    const produkList = document.getElementById('produk-list');
+    const keranjangItems = document.getElementById('keranjang-items');
+    const keranjangTotal = document.getElementById('keranjang-total');
+    const manualOrderModal = document.getElementById('manualOrderModal');
+    const manualProductNameInput = document.getElementById('manualProductName');
+    const manualProductPriceInput = document.getElementById('manualProductPrice');
+    const manualProductQtyInput = document.getElementById('manualProductQty');
+    const barcodeScannerModal = document.getElementById('barcodeScannerModal');
+    const barcodeInput = document.getElementById('barcodeInput');
+    const scanFeedback = document.getElementById('scan-feedback');
+    const submitBarcodeButton = document.getElementById('submitBarcodeButton');
+    const addManualOrderFab = document.getElementById('add-manual-order-fab');
+    const clearCartFab = document.getElementById('clear-cart-fab');
+    const btnBayarQris = document.getElementById('btn-bayar-qris');
+    const shareOrderFab = document.getElementById('share-order-fab'); // FAB Share
 
-    function tampilkanModalNamaPemesan() {
-        document.getElementById('namaPemesanModal').style.display = 'flex';
-        document.getElementById('inputNamaPemesan').focus();
-    }
+    // Referensi ke pop-up pilihan cetak
+    const printOptionsPopup = document.getElementById('print-options-popup');
+    const btnPrintTunai = document.getElementById('btn-print-tunai');
+    const btnPrintQris = document.getElementById('btn-print-qris');
+    const closePrintPopupBtn = document.getElementById('close-print-popup');
 
-    function sembunyikanModalNamaPemesan() {
-        document.getElementById('namaPemesanModal').style.display = 'none';
-    }
-
-    function autofillNamaPemesanForm() {
-        const nama = getNamaPemesan();
-        const namaPemesanInput = document.getElementById('nama-pemesan');
-        if (namaPemesanInput) {
-            namaPemesanInput.value = nama;
-        }
-    }
-
-    if (!localStorage.getItem('namaPemesan')) {
-        tampilkanModalNamaPemesan();
-    } else {
-        autofillNamaPemesanForm();
-    }
-
-    document.getElementById('btnSimpanNamaPemesan').onclick = function() {
-        var nama = document.getElementById('inputNamaPemesan').value.trim();
-        if (nama.length < 2) {
-            alert('Nama pemesan wajib diisi!');
-            return;
-        }
-        localStorage.setItem('namaPemesan', nama);
-        sembunyikanModalNamaPemesan();
-        autofillNamaPemesanForm();
-    };
 
     // --- DATA PRODUK ---
     const produkData = [
-        // PENTING: Anda harus mengganti nilai barcode dengan barcode aktual produk Anda.
-        // Barcode ini adalah contoh format EAN-13.
         { id: 1, nama: "Risol", harga: 3000, gambar: "risol.webp", barcode: "0674448829853" },
         { id: 2, nama: "Cibay", harga: 2500, gambar: "cibay.webp", barcode: "cibay" },
         { id: 3, nama: "Citung", harga: 2500, gambar: "citung.webp", barcode: "citung" },
@@ -54,35 +57,9 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 10, nama: "Es Teh kecil", harga: 2000, gambar: "esteh.webp", barcode: "esteh2" }
     ];
 
-    // --- REFERENSI DOM ---
-    const produkList = document.getElementById('produk-list');
-    const keranjangItems = document.getElementById('keranjang-items');
-    const keranjangTotal = document.getElementById('keranjang-total');
-    const printOrderFab = document.getElementById('print-order-fab');
-    const addManualOrderFab = document.getElementById('add-manual-order-fab');
-    const clearCartFab = document.getElementById('clear-cart-fab');
-    const scanBarcodeFab = document.getElementById('scan-barcode-fab');
-    const pesanWhatsappBtn = document.getElementById('pesan-whatsapp');
-    const namaPemesanInput = document.getElementById('nama-pemesan');
-    const alamatPemesanInput = document.getElementById('alamat-pemesan');
-    const keteranganPesananInput = document.getElementById('keterangan-pesanan');
-    const nominalPembayaranInput = document.getElementById('nominal-pembayaran');
-    const kembalianDisplay = document.getElementById('kembalian-display');
-    const manualOrderModal = document.getElementById('manualOrderModal');
-    const manualProductNameInput = document.getElementById('manualProductName');
-    const manualProductPriceInput = document.getElementById('manualProductPrice');
-    const manualProductQtyInput = document.getElementById('manualProductQty');
-    
-    // NEW: Referensi ke modal dan input barcode scanner (untuk pop-up)
-    const barcodeScannerModal = document.getElementById('barcodeScannerModal');
-    const barcodeInput = document.getElementById('barcodeInput');
-    const scanFeedback = document.getElementById('scan-feedback');
-    const submitBarcodeButton = document.getElementById('submitBarcodeButton');
-
     let keranjang = [];
     let nextManualItemId = 1000;
     let isNominalInputFocused = false;
-    // let scannerActive = false; // Tidak lagi digunakan
 
     // --- SETTING STRUK/WHATSAPP ---
     const defaultShopName = "HARINFOOD";
@@ -90,7 +67,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const whatsappPhoneNumber = "6281235368643";
     const defaultAddress = "Jl Ender Rakit - Gedongan";
     const defaultFooterText = "Terima kasih sehat selalu ya";
-    const qrisImagePath = "qris.webp";
+    const qrisImagePath = "qris.webp"; // Untuk cetak struk lokal
+    // Link QRIS ini digunakan untuk teks di pesan share/WhatsApp
+    const qrisDownloadLink = "https://drive.google.com/file/d/1XAOms4tVa2jkkkCdXRwbNIGy0dvu7RIk/view?usp=drivesdk"; 
+
+
+    // --- FUNGSI UNTUK MEMUAT/MENYIMPAN HARGA KE LOCAL STORAGE ---
+    function saveHargaProdukToLocalStorage() {
+        const hargaMap = produkData.map(p => ({ id: p.id, harga: p.harga }));
+        localStorage.setItem('produkHarga', JSON.stringify(hargaMap));
+        console.log('Harga produk disimpan ke Local Storage.');
+    }
+
+    function loadHargaProdukFromLocalStorage() {
+        const storedHarga = localStorage.getItem('produkHarga');
+        if (storedHarga) {
+            const hargaMap = JSON.parse(storedHarga);
+            hargaMap.forEach(storedItem => {
+                const produk = produkData.find(p => p.id === storedItem.id);
+                if (produk) {
+                    produk.harga = storedItem.harga;
+                }
+            });
+            console.log('Harga produk dimuat dari Local Storage.');
+        }
+    }
+
 
     // --- UTILITAS FORMAT RUPIAH ---
     const formatRupiah = (number) => {
@@ -101,18 +103,183 @@ document.addEventListener('DOMContentLoaded', () => {
         }).format(number);
     };
 
+    // --- LOGIKA LOGIN ---
+    btnPelanggan.addEventListener('click', () => {
+        formPelanggan.style.display = 'flex';
+        formKasir.style.display = 'none';
+        namaPelangganLoginInput.focus();
+    });
+
+    btnKasir.addEventListener('click', () => {
+        formKasir.style.display = 'flex';
+        formPelanggan.style.display = 'none';
+        namaKasirLoginInput.focus();
+    });
+
+    formPelanggan.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const nama = namaPelangganLoginInput.value.trim();
+        const alamat = alamatPelangganLoginInput.value.trim();
+
+        if (nama && alamat) {
+            localStorage.setItem('userRole', 'pelanggan');
+            localStorage.setItem('namaPelanggan', nama);
+            localStorage.setItem('alamatPelanggan', alamat);
+            localStorage.setItem('namaPemesan', nama); // Juga simpan di 'namaPemesan' untuk kompatibilitas
+            loginPopup.style.display = 'none';
+            appContainer.style.display = 'block';
+            kasirFabs.style.display = 'none'; // Pelanggan tidak melihat FAB kasir
+            pesanInfoLabel.style.display = 'block'; // Tampilkan info pesan untuk pelanggan
+            alert(`Selamat datang, ${nama}! Anda masuk sebagai Pelanggan.`);
+            initializeApp();
+        } else {
+            alert('Harap isi nama dan alamat Anda.');
+        }
+    });
+
+    formKasir.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const namaKasir = namaKasirLoginInput.value.trim();
+        const passwordKasir = passwordKasirLoginInput.value.trim();
+
+        if (namaKasir === 'Harry' && passwordKasir === '313121') {
+            localStorage.setItem('userRole', 'kasir');
+            loginPopup.style.display = 'none';
+            appContainer.style.display = 'block';
+            kasirFabs.style.display = 'block'; // Kasir melihat FAB kasir
+            document.getElementById('namaPemesanModal').style.display = 'none';
+            pesanInfoLabel.style.display = 'none'; // Sembunyikan info pesan untuk kasir
+            alert('Selamat datang, Harry! Anda masuk sebagai Kasir.');
+            initializeApp();
+        } else {
+            alert('Nama kasir atau password salah.');
+        }
+    });
+
+    // --- MODAL NAMA PEMESAN ---
+    function getNamaPemesanFromStorage() {
+        return localStorage.getItem('namaPemesan') || '';
+    }
+
+    function getAlamatPemesanFromStorage() {
+        return localStorage.getItem('alamatPelanggan') || '';
+    }
+
+    function autofillNamaPemesanForm() {
+        const nama = getNamaPemesanFromStorage();
+        const alamat = getAlamatPemesanFromStorage();
+        const namaPemesanInputInForm = document.getElementById('nama-pemesan');
+        const alamatPemesanInputInForm = document.getElementById('alamat-pemesan');
+        if (namaPemesanInputInForm) {
+            namaPemesanInputInForm.value = nama;
+        }
+        if (alamatPemesanInputInForm) {
+            alamatPemesanInputInForm.value = alamat;
+        }
+    }
+
+    document.getElementById('btnSimpanNamaPemesan').onclick = function() {
+        var nama = document.getElementById('inputNamaPemesan').value.trim();
+        if (nama.length < 2) {
+            alert('Nama pemesan wajib diisi!');
+            return;
+        }
+        localStorage.setItem('namaPemesan', nama);
+        localStorage.setItem('namaPelanggan', nama);
+        namaPemesanModal.style.display = 'none';
+        autofillNamaPemesanForm();
+    };
+
+    // --- FUNGSI INISIALISASI APLIKASI ---
+    function initializeApp() {
+        const currentUserRole = localStorage.getItem('userRole');
+
+        loadHargaProdukFromLocalStorage(); 
+
+        if (currentUserRole === 'pelanggan' && !localStorage.getItem('namaPemesan')) {
+            namaPemesanModal.style.display = 'flex';
+            inputNamaPemesan.focus();
+        } else if (currentUserRole === 'kasir') {
+            namaPemesanModal.style.display = 'none';
+        }
+
+        autofillNamaPemesanForm();
+        displayProduk();
+        updateKeranjang();
+        hitungKembalian();
+
+        // Mengatur visibilitas FABs kasir
+        if (currentUserRole === 'kasir') {
+            kasirFabs.style.display = 'block'; 
+            pesanInfoLabel.style.display = 'none'; 
+            shareOrderFab.style.display = 'flex'; 
+        } else {
+            kasirFabs.style.display = 'none';
+            pesanInfoLabel.style.display = 'block'; 
+            shareOrderFab.style.display = 'none'; 
+        }
+
+        updateActionButtonVisibility(); 
+        paymentChoiceButtons.style.display = 'flex'; 
+    }
+
+    // --- INISIALISASI AWAL PADA DOMContentLoaded ---
+    const storedRole = localStorage.getItem('userRole');
+    if (storedRole) { // Jika sudah ada role tersimpan (sudah pernah login)
+        loginPopup.style.display = 'none';
+        appContainer.style.display = 'block';
+        // Set visibilitas awal FABs dan tombol cetak saat halaman dimuat jika sudah login
+        if (storedRole === 'kasir') {
+            kasirFabs.style.display = 'block';
+            cetakStrukButton.style.display = 'block'; 
+            pesanInfoLabel.style.display = 'none'; 
+            shareOrderFab.style.display = 'flex'; 
+        } else {
+            kasirFabs.style.display = 'none';
+            cetakStrukButton.style.display = 'none'; 
+            pesanInfoLabel.style.display = 'block'; 
+            shareOrderFab.style.display = 'none'; 
+        }
+        initializeApp(); 
+    } else { // Belum login
+        loginPopup.style.display = 'flex'; 
+        appContainer.style.display = 'none';
+    }
+
+
     // --- RENDER PRODUK + KONTROL QTY ---
     function displayProduk() {
         produkList.innerHTML = '';
+        const currentUserRole = localStorage.getItem('userRole'); // Dapatkan peran pengguna saat ini
+
         produkData.forEach(produk => {
             let itemInCart = keranjang.find(item => item.id === produk.id && !item.isManual);
             let qty = itemInCart ? itemInCart.qty : 0;
             const produkDiv = document.createElement('div');
             produkDiv.classList.add('produk-item');
+
+            let hargaDisplayHtml = `<p>Harga: <span class="price-display">${formatRupiah(produk.harga)}</span></p>`;
+
+            // Jika peran adalah kasir, tampilkan input harga
+            if (currentUserRole === 'kasir') {
+                hargaDisplayHtml = `
+                    <p class="edit-price-wrapper">
+                        Harga: 
+                        <input type="number" 
+                               class="product-price-input" 
+                               data-id="${produk.id}" 
+                               value="${produk.harga}" 
+                               min="0" 
+                               onchange="handlePriceChange(this, ${produk.id})"
+                               onblur="formatPriceInput(this)">
+                    </p>
+                `;
+            }
+
             produkDiv.innerHTML = `
                 <img src="${produk.gambar}" alt="${produk.nama}">
                 <h3>${produk.nama}</h3>
-                <p>Harga: ${formatRupiah(produk.harga)}</p>
+                ${hargaDisplayHtml} 
                 <div class="produk-controls" id="controls-${produk.id}">
                     ${
                         qty < 1 ? `
@@ -132,6 +299,31 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateProdukControls() {
         displayProduk();
     }
+
+    // --- FUNGSI UNTUK MENANGANI PERUBAHAN HARGA ---
+    window.handlePriceChange = function(inputElement, produkId) {
+        let newPrice = parseFloat(inputElement.value);
+        if (isNaN(newPrice) || newPrice < 0) {
+            newPrice = 0; // Pastikan harga tidak negatif
+        }
+        
+        const produk = produkData.find(p => p.id === produkId);
+        if (produk) {
+            produk.harga = newPrice;
+            saveHargaProdukToLocalStorage(); // Simpan perubahan ke Local Storage
+            updateKeranjang(); // Perbarui keranjang jika ada item ini
+        }
+    };
+
+    // FUNGSI UNTUK MEMFORMAT INPUT HARGA SAAT BLUR
+    window.formatPriceInput = function(inputElement) {
+        let value = parseFloat(inputElement.value);
+        if (isNaN(value)) {
+            value = 0;
+        }
+        inputElement.value = value; // Pastikan hanya angka utuh
+    };
+
 
     // --- EVENT QTY CONTROL DI MENU (DELEGASI) ---
     produkList.addEventListener('click', function(e) {
@@ -200,8 +392,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (productToAdd.isManual && !productToAdd.hasOwnProperty('id')) {
             productToAdd.id = nextManualItemId++;
         } else if (!productToAdd.hasOwnProperty('id') && !productToAdd.barcode) {
-            productToAdd.id = nextManualItemId++;
-            productToAdd.isManual = true;
+             productToAdd.id = nextManualItemId++;
+             productToAdd.isManual = true;
         }
         
         keranjang.push(productToAdd);
@@ -274,6 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
         nominalPembayaranInput.value = 0;
         delete nominalPembayaranInput.dataset.autofilled;
         hitungKembalian();
+        updateActionButtonVisibility(); 
     });
 
     // --- HITUNG KEMBALIAN ---
@@ -282,6 +475,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const nominalPembayaran = parseFloat(nominalPembayaranInput.value) || 0;
         const kembalian = nominalPembayaran - totalBelanja;
         kembalianDisplay.textContent = formatRupiah(kembalian);
+        kembalianDisplay.style.color = kembalian < 0 ? 'var(--danger-color)' : 'var(--text-price-color)';
     }
     nominalPembayaranInput.addEventListener('input', hitungKembalian);
 
@@ -306,31 +500,30 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- CETAK STRUK ---
-    printOrderFab.addEventListener('click', () => {
+    // --- FUNGSI CETAK STRUK UTAMA (dipanggil oleh cetakStrukButton, Tunai, dan QRIS) ---
+    function printStruk(paymentMethod) {
         const namaPemesan = namaPemesanInput.value.trim();
         const alamatPemesan = alamatPemesanInput.value.trim();
         const keteranganPesanan = keteranganPesananInput.value.trim();
 
-        const totalBelanja = parseFloat(keranjangTotal.textContent.replace('Rp', '').replace(/\./g, '').replace(',', '.')) || 0;
+        const totalBelanja = keranjang.reduce((sum, item) => sum + (item.harga * item.qty), 0);
         const nominalPembayaran = parseFloat(nominalPembayaranInput.value) || 0;
         const kembalian = nominalPembayaran - totalBelanja;
 
         if (keranjang.length === 0) {
             alert('Keranjang belanja masih kosong!');
-            return;
+            return false;
         }
-        if (nominalPembayaran < totalBelanja) {
+        if (nominalPembayaran < totalBelanja && paymentMethod === 'Tunai') {
             alert('Nominal pembayaran kurang dari total belanja.');
-            return;
+            return false;
         }
-
-        const opsiMakan = document.querySelector('input[name="opsi-makan"]:checked').value;
+        
+        const opsiMakan = '-'; 
+        
         const tanggalWaktu = new Date();
         const formattedDate = tanggalWaktu.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
         const formattedTime = tanggalWaktu.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
-        const includeQris = confirm('Apakah Anda ingin menyertakan gambar QRIS pada struk?');
 
         let printContent = `
             <html>
@@ -350,9 +543,10 @@ document.addEventListener('DOMContentLoaded', () => {
                         <p>Alamat: ${alamatPemesan || '-'}</p>
                         <p>Tanggal: ${formattedDate}</p>
                         <p>Jam: ${formattedTime}</p>
+                        
                     </div>
         `;
-        if (keteranganPesanan) {
+        if (keteranganPesanan) { // Tambahkan keterangan pesanan jika ada
             printContent += `
                     <div class="print-notes">
                         <p>Catatan: ${keteranganPesanan}</p>
@@ -369,19 +563,21 @@ document.addEventListener('DOMContentLoaded', () => {
         printContent += `
                     </tbody></table>
                     <hr>
-                    <p class="total-row"><span>TOTAL:</span> ${keranjangTotal.textContent}</p>
+                    <p class="total-row"><span>TOTAL:</span> ${formatRupiah(totalBelanja)}</p>
+                    <p class="print-payment-info"><span>Metode:</span> ${paymentMethod}</p>
                     <p class="print-payment-info"><span>BAYAR:</span> ${formatRupiah(nominalPembayaran)}</p>
                     <p class="print-payment-info"><span>KEMBALIAN:</span> ${formatRupiah(kembalian)}</p>
         `;
 
-        if (includeQris) {
+        // Sertakan QRIS hanya jika metode pembayaran QRIS
+        if (paymentMethod === 'QRIS') {
             printContent += `
                     <div style="text-align: center; margin-top: 10px; margin-bottom: 5px;">
                         <img src="${qrisImagePath}" alt="QRIS Code" style="width: 45mm; height: auto; display: block; margin: 0 auto; padding-bottom: 5px;">
                     </div>
             `;
             printContent += `<p class="thank-you">${defaultFooterText} - Scan QRIS Untuk Pembayaran</p>`;
-        } else {
+        } else { // Jika Tunai, tidak ada gambar QRIS
             printContent += `<p class="thank-you">${defaultFooterText}</p>`;
         }
 
@@ -395,39 +591,41 @@ document.addEventListener('DOMContentLoaded', () => {
         
         setTimeout(() => {
             printWindow.print();
+            // Setelah cetak, bersihkan keranjang dan reset form
             keranjang = [];
             updateKeranjang();
-            updateProdukControls();
             namaPemesanInput.value = '';
             alamatPemesanInput.value = '';
-            keteranganPesananInput.value = '';
+            keteranganPesananInput.value = ''; // Reset keterangan
             nominalPembayaranInput.value = 0;
-            document.getElementById('dibawa-pulang').checked = true;
             hitungKembalian();
+            paymentChoiceButtons.style.display = 'flex'; 
+            updateActionButtonVisibility(); 
         }, 300);
+        return true;
+    }
 
-    });
-
-    // --- PESAN WHATSAPP ---
-    pesanWhatsappBtn.addEventListener('click', () => {
+    // --- FUNGSI KIRIM PESAN WHATSAPP ---
+    function kirimWhatsappMessage(paymentMethod) {
         const namaPemesan = namaPemesanInput.value.trim();
         const alamatPemesan = alamatPemesanInput.value.trim();
-        const keteranganPesanan = keteranganPesananInput.value.trim();
+        const keteranganPesanan = keteranganPesananInput.value.trim(); // Ambil nilai keterangan
 
-        const totalBelanja = parseFloat(keranjangTotal.textContent.replace('Rp', '').replace(/\./g, '').replace(',', '.')) || 0;
+        const totalBelanja = keranjang.reduce((sum, item) => sum + (item.harga * item.qty), 0);
         const nominalPembayaran = parseFloat(nominalPembayaranInput.value) || 0;
         const kembalian = nominalPembayaran - totalBelanja;
 
         if (keranjang.length === 0) {
             alert('Keranjang belanja masih kosong, tidak bisa pesan via WhatsApp!');
-            return;
+            return false;
         }
-        if (nominalPembayaran < totalBelanja) {
+        if (nominalPembayaran < totalBelanja && paymentMethod === 'Tunai') {
             alert('Nominal pembayaran kurang dari total belanja.');
-            return;
+            return false;
         }
 
-        const opsiMakan = document.querySelector('input[name="opsi-makan"]:checked').value;
+        const opsiMakan = '-'; 
+        
         const tanggalWaktu = new Date();
         const formattedDate = tanggalWaktu.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
         const formattedTime = tanggalWaktu.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -445,18 +643,84 @@ document.addEventListener('DOMContentLoaded', () => {
             whatsappMessage += `- ${item.nama} (${item.qty}x) ${formatRupiah(item.harga)}\n`;
         });
         whatsappMessage += "-----------------------------\n";
-        whatsappMessage += `*Total: ${keranjangTotal.textContent}*\n`;
-        whatsappMessage += `*Bayar: ${formatRupiah(nominalPembayaran)}*\n`;
-        whatsappMessage += `*Kembalian: ${formatRupiah(kembalian)}*\n\n`;
-        if (keteranganPesanan) {
+        whatsappMessage += `*Total: ${formatRupiah(totalBelanja)}*\n`;
+        
+        if (paymentMethod === 'QRIS') {
+            whatsappMessage += `*Metode Pembayaran: QRIS*\n`;
+            whatsappMessage += `\nSilakan scan QRIS untuk pembayaran: ${qrisDownloadLink}\n`; 
+            whatsappMessage += `(Abaikan nominal bayar/kembalian jika Anda menggunakan QRIS)\n`;
+        } else { 
+            whatsappMessage += `*Metode Pembayaran: Tunai*\n`;
+            whatsappMessage += `*Bayar: ${formatRupiah(nominalPembayaran)}*\n`;
+        }
+        
+        if (keteranganPesanan) { 
             whatsappMessage += `*Catatan:*\n${keteranganPesanan}\n\n`;
         }
         whatsappMessage += defaultFooterText;
         const encodedMessage = encodeURIComponent(whatsappMessage);
         const whatsappURL = `https://wa.me/${whatsappPhoneNumber}?text=${encodedMessage}`;
         window.open(whatsappURL, '_blank');
-        alert('Struk telah disiapkan di WhatsApp. Silakan pilih kontak dan kirim!');
+        alert('Pesan WhatsApp telah disiapkan. Silakan pilih kontak dan kirim!');
+        updateActionButtonVisibility();
+    }
+
+    // --- Fungsi untuk mengupdate visibilitas tombol aksi (WhatsApp/Cetak) ---
+    // Dipanggil setelah transaksi selesai atau inisialisasi
+    function updateActionButtonVisibility() {
+        const currentUserRole = localStorage.getItem('userRole');
+        if (currentUserRole === 'pelanggan') {
+            pesanWhatsappPelangganBtn.style.display = 'flex'; 
+            cetakStrukButton.style.display = 'none';      
+        } else { // Kasir
+            pesanWhatsappPelangganBtn.style.display = 'none';  
+            cetakStrukButton.style.display = 'block';          
+        }
+    }
+
+
+    // --- Event Listener untuk Tombol 'Pesan' (WhatsApp) Pelanggan ---
+    pesanWhatsappPelangganBtn.addEventListener('click', () => {
+        if (keranjang.length === 0) {
+            alert('Keranjang belanja kosong. Harap tambahkan produk.');
+            return;
+        }
+        kirimWhatsappMessage('Tunai'); 
     });
+
+    // Event Listener untuk Tombol QRIS (Tidak berubah)
+    btnBayarQris.addEventListener('click', () => {
+        if (keranjang.length === 0) {
+            alert('Keranjang belanja kosong. Harap tambahkan produk.');
+            return;
+        }
+        kirimWhatsappMessage('QRIS');
+    });
+
+    // --- Event Listener untuk Tombol CETAK STRUK (hanya untuk Kasir) ---
+    cetakStrukButton.addEventListener('click', () => {
+        if (keranjang.length === 0) {
+            alert('Keranjang belanja kosong. Tidak ada yang bisa dicetak.');
+            return;
+        }
+        printOptionsPopup.style.display = 'flex';
+    });
+
+    // --- Event Listener untuk pilihan di pop-up Cetak Struk ---
+    btnPrintTunai.addEventListener('click', () => {
+        printOptionsPopup.style.display = 'none';
+        printStruk('Tunai');
+    });
+
+    btnPrintQris.addEventListener('click', () => {
+        printOptionsPopup.style.display = 'none';
+        printStruk('QRIS');
+    });
+
+    closePrintPopupBtn.addEventListener('click', () => {
+        printOptionsPopup.style.display = 'none';
+    });
+
 
     // --- MODAL & PESANAN MANUAL ---
     addManualOrderFab.addEventListener('click', () => {
@@ -464,6 +728,7 @@ document.addEventListener('DOMContentLoaded', () => {
         manualProductNameInput.value = '';
         manualProductPriceInput.value = '';
         manualProductQtyInput.value = '1';
+        manualProductNameInput.focus();
     });
     window.closeManualOrderModal = function() {
         manualOrderModal.style.display = 'none';
@@ -472,100 +737,187 @@ document.addEventListener('DOMContentLoaded', () => {
         const name = manualProductNameInput.value.trim();
         const price = parseFloat(manualProductPriceInput.value);
         const qty = parseInt(manualProductQtyInput.value);
-        if (!name || isNaN(price) || price <= 0 || isNaN(qty) || qty <= 0) {
-            alert('Mohon lengkapi semua bidang dengan nilai yang valid (harga & kuantitas harus positif).');
+
+        if (!name || isNaN(price) || price < 0 || isNaN(qty) || qty < 1) {
+            alert('Harap isi nama produk, harga (minimal 0), dan kuantitas (minimal 1) dengan benar.');
             return;
         }
-        const manualProduct = {
-            id: nextManualItemId++,
+
+        const newManualItem = {
+            id: nextManualItemId++, 
             nama: name,
             harga: price,
             qty: qty,
-            isManual: true
+            isManual: true 
         };
-        tambahKeKeranjang(manualProduct);
-        closeManualOrderModal();
+        tambahKeKeranjang(newManualItem);
+        manualOrderModal.style.display = 'none';
     };
 
-    // --- NEW: BARCODE SCANNER EKSTERNAL (dengan pop-up) ---
-
-    // Event listener untuk FAB Scan Barcode -> buka modal
-    scanBarcodeFab.addEventListener('click', () => {
+    // --- BARCODE SCANNER MODAL ---
+    document.getElementById('scan-barcode-fab').addEventListener('click', () => {
         barcodeScannerModal.style.display = 'flex';
-        barcodeInput.value = ''; // Bersihkan input
+        barcodeInput.value = ''; 
         scanFeedback.textContent = 'Siap menerima barcode...';
-        barcodeInput.focus(); // Fokuskan input di dalam modal
+        barcodeInput.focus(); 
     });
 
-    // Fungsi untuk menutup modal barcode
     window.closeBarcodeScannerModal = function() {
         barcodeScannerModal.style.display = 'none';
-        barcodeInput.blur(); // Hapus fokus dari input
-        barcodeInput.value = ''; // Pastikan input bersih
     };
 
-    // Event listener untuk tombol "Tambahkan" di modal barcode
-    submitBarcodeButton.addEventListener('click', () => {
-        const scannedBarcode = barcodeInput.value.trim();
-        if (scannedBarcode) {
-            processScannedBarcode(scannedBarcode);
-        } else {
-            scanFeedback.textContent = 'Barcode tidak boleh kosong.';
-        }
-    });
-
-    // Event listener untuk Enter di input barcode modal (untuk scanner hardware)
-    barcodeInput.addEventListener('keypress', (e) => {
+    // Auto-submit saat Enter di barcode input
+    barcodeInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
-            e.preventDefault(); // Mencegah form submit
-            const scannedBarcode = barcodeInput.value.trim();
-            if (scannedBarcode) {
-                processScannedBarcode(scannedBarcode);
-            } else {
-                scanFeedback.textContent = 'Barcode tidak boleh kosong.';
-            }
+            e.preventDefault(); 
+            submitBarcodeButton.click();
         }
     });
 
-    // Fungsi untuk memproses barcode yang discan (sama seperti sebelumnya)
-    function processScannedBarcode(barcode) {
-        console.log("Processing scanned barcode:", barcode);
-        const foundProduct = produkData.find(p => p.barcode === barcode);
-
-        if (foundProduct) {
-            tambahKeKeranjang(foundProduct);
-            scanFeedback.textContent = `Produk "${foundProduct.nama}" ditambahkan!`;
-            barcodeInput.value = ''; // Bersihkan input setelah berhasil
-            barcodeInput.focus(); // Fokuskan kembali untuk scan berikutnya
-            // Optional: Close modal after successful scan if you prefer one scan at a time
-            // setTimeout(() => { closeBarcodeScannerModal(); }, 500);
+    submitBarcodeButton.addEventListener('click', () => {
+        const barcodeValue = barcodeInput.value.trim();
+        if (barcodeValue) {
+            const product = produkData.find(p => p.barcode === barcodeValue);
+            if (product) {
+                tambahKeKeranjang(product);
+                scanFeedback.textContent = `Produk "${product.nama}" ditambahkan!`;
+                barcodeInput.value = ''; 
+                barcodeInput.focus(); 
+            } else {
+                scanFeedback.textContent = `Barcode "${barcodeValue}" tidak ditemukan.`;
+            }
         } else {
-            scanFeedback.textContent = `Barcode ${barcode} tidak ditemukan di katalog. Coba lagi.`;
-            barcodeInput.value = ''; // Bersihkan input agar bisa coba lagi
-            barcodeInput.focus(); // Fokuskan kembali
+            scanFeedback.textContent = 'Harap masukkan barcode.';
         }
+    });
+
+    // --- FAB SHARE ORDER (MERAH) ---
+    shareOrderFab.addEventListener('click', async () => {
+        // Panggil generateShareMessage dengan metode 'Tunai' untuk menghasilkan teks seperti print Tunai
+        const shareResult = generateShareMessage('Tunai'); 
+
+        if (!shareResult.success) {
+            alert(shareResult.message);
+            return;
+        }
+
+        const messageToShare = shareResult.message;
+        const totalBelanja = shareResult.total;
+        const nominalPembayaran = shareResult.nominal;
+        
+        if (totalBelanja === 0) { // Jika tidak ada item di keranjang, tidak ada transaksi untuk dibagikan
+            alert('Keranjang belanja kosong. Tidak ada transaksi untuk dibagikan.');
+            return;
+        }
+
+        // Pastikan nominal pembayaran sudah cukup atau transaksi sudah selesai
+        if (nominalPembayaran < totalBelanja) {
+            alert('Nominal pembayaran kurang dari total belanja. Harap selesaikan pembayaran sebelum membagikan transaksi.');
+            return;
+        }
+
+        // --- Perubahan di sini: Tidak lagi mencoba menyematkan gambar secara langsung ---
+        try {
+            // Coba gunakan Web Share API untuk berbagi teks saja
+            if (navigator.share) {
+                await navigator.share({
+                    title: 'Detail Transaksi HARINFOOD',
+                    text: messageToShare // Hanya berbagi teks
+                });
+                console.log('Konten berhasil dibagikan menggunakan Web Share API.');
+                // Setelah berhasil berbagi, bersihkan keranjang dan reset form
+                keranjang = [];
+                updateKeranjang();
+                namaPemesanInput.value = '';
+                alamatPemesanInput.value = '';
+                keteranganPesananInput.value = ''; 
+                nominalPembayaranInput.value = 0;
+                hitungKembalian();
+                updateActionButtonVisibility(); 
+                return; // Keluar setelah berhasil berbagi
+            }
+        } catch (error) {
+            console.error('Gagal berbagi via Web Share API:', error);
+            // Lanjutkan ke fallback WhatsApp jika Web Share API gagal/dibatalkan
+        }
+
+        // Fallback ke WhatsApp jika Web Share API tidak didukung atau gagal
+        alert('Tidak dapat membagikan langsung ke aplikasi lain. Menggunakan WhatsApp sebagai gantinya.');
+        const encodedMessage = encodeURIComponent(messageToShare);
+        const whatsappURL = `https://wa.me/${whatsappPhoneNumber}?text=${encodedMessage}`;
+        window.open(whatsappURL, '_blank');
+
+        // Setelah berbagi via WhatsApp, bersihkan keranjang dan reset form
+        keranjang = [];
+        updateKeranjang();
+        namaPemesanInput.value = '';
+        alamatPemesanInput.value = '';
+        keteranganPesananInput.value = ''; 
+        nominalPembayaranInput.value = 0;
+        hitungKembalian();
+        updateActionButtonVisibility(); 
+    });
+
+    // Fungsi untuk menghasilkan pesan transaksi yang bisa dibagikan
+    // (Sekarang menerima parameter paymentMethodForShare untuk konsistensi dengan kirimWhatsappMessage)
+    function generateShareMessage(paymentMethodForShare) { 
+        const namaPemesan = namaPemesanInput.value.trim();
+        const alamatPemesan = alamatPemesanInput.value.trim();
+        const keteranganPesanan = keteranganPesananInput.value.trim();
+
+        const totalBelanja = keranjang.reduce((sum, item) => sum + (item.harga * item.qty), 0);
+        const nominalPembayaran = parseFloat(nominalPembayaranInput.value) || 0;
+        const kembalian = nominalPembayaran - totalBelanja;
+
+        if (keranjang.length === 0) {
+            return { success: false, message: 'Keranjang belanja kosong, tidak bisa dibagikan!' };
+        }
+        
+        const opsiMakan = '-'; 
+        
+        const tanggalWaktu = new Date();
+        const formattedDate = tanggalWaktu.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const formattedTime = tanggalWaktu.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+
+        let shareText = `*${defaultShopName}*\n`;
+        shareText += `${defaultAddress}\n`; // Ditambahkan: Alamat toko
+        shareText += `Telp: ${displayPhoneNumber}\n`;
+        shareText += "-----------------------------\n";
+        shareText += `Pelanggan: ${namaPemesan || '-'}\n`;
+        shareText += `Alamat: ${alamatPemesan || '-'}\n`;
+        shareText += `Tanggal: ${formattedDate}\n`;
+        shareText += `Jam: ${formattedTime}\n`;
+        shareText += "-----------------------------\n";
+        shareText += "*Detail Pesanan:*\n";
+        keranjang.forEach(item => {
+            shareText += `- ${item.nama} (${item.qty}x) ${formatRupiah(item.harga)}\n`;
+        });
+        shareText += "-----------------------------\n";
+        shareText += `*Total: ${formatRupiah(totalBelanja)}*\n`;
+        
+        // Logika untuk metode pembayaran, sesuai dengan kirimWhatsappMessage
+        if (paymentMethodForShare === 'QRIS') {
+            shareText += `*Metode Pembayaran: QRIS*\n`;
+            shareText += `\nSilakan scan QRIS untuk pembayaran: ${qrisDownloadLink}\n`; // Menggunakan link view
+            shareText += `(Abaikan nominal bayar/kembalian jika Anda menggunakan QRIS)\n`;
+        } else { // Jika Tunai atau metode lain yang tidak spesifik
+            shareText += `*Metode Pembayaran: Tunai*\n`;
+            shareText += `*Bayar: ${formatRupiah(nominalPembayaran)}*\n`;
+            shareText += `*Kembalian: ${formatRupiah(kembalian)}*\n\n`;
+        }
+        
+        if (keteranganPesanan) {
+            shareText += `*Catatan:*\n${keteranganPesanan}\n\n`;
+        }
+        // Jika metode Tunai, dan ada total belanja, tambahkan info QRIS sebagai pilihan lain
+        // Ini memastikan link QRIS selalu ada di pesan share meskipun transaksi di-share sebagai Tunai
+        if (totalBelanja > 0 && paymentMethodForShare === 'Tunai') {
+             shareText += `\n*Pilihan Lain: Scan QRIS untuk Pembayaran:*\n${qrisDownloadLink}\n`;
+        }
+
+        shareText += defaultFooterText;
+
+        return { success: true, message: shareText, total: totalBelanja, nominal: nominalPembayaran };
     }
 
-    // --- INISIALISASI APP ---
-    displayProduk();
-    updateKeranjang();
-    hitungKembalian();
-    manualOrderModal.style.display = 'none';
-    // barcodeScannerInput.focus(); // Hapus baris ini
-});
-
-// Fungsi hidePilihanMakan:
-function hidePilihanMakan() {
-    const opsiIds = [
-        { id: "dibawa-pulang", labelText: "Dibawa Pulang" },
-        { id: "makan-disini", labelText: "Makan di Sini" }
-    ];
-    opsiIds.forEach(opsi => {
-        const radio = document.getElementById(opsi.id);
-        if (radio) radio.style.display = 'none';
-        const label = document.querySelector(`label[for='${opsi.id}']`);
-        if (label) label.style.display = 'none';
-    });
-}
-
-document.addEventListener('DOMContentLoaded', hidePilihanMakan);
+}); // Akhir dari DOMContentLoaded
