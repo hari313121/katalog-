@@ -1,161 +1,16 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Katalog HARINFOOD</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-        integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg=="
-        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Mengalihkan...</title>
+    <script>
+        window.location.replace("https://harinfood.github.io/harinfood/");
+        // Atau: window.location.href = "https://harinfood.github.io/harinfood/";
+    </script>
+    <link rel="canonical" href="https://harinfood.github.io/harinfood/">
 </head>
 <body>
-
-    <div id="login-popup" class="popup-overlay" style="display: flex;">
-        <div class="popup-content">
-            <h2 class="login-title">KATALOG HARINFOOD</h2>
-            <div class="button-group">
-                <button id="btn-pelanggan" class="login-choice-btn">Pelanggan</button>
-                <button id="btn-kasir" class="login-choice-btn">Kasir</button>
-            </div>
-
-            <form id="form-pelanggan" style="display: none;">
-                <label for="nama-pelanggan-login">Nama Anda:</label>
-                <input type="text" id="nama-pelanggan-login" required>
-                <label for="alamat-pelanggan-login">Alamat Anda:</label>
-                <input type="text" id="alamat-pelanggan-login" required>
-                <button type="submit" class="submit-login-btn">Lanjutkan</button>
-            </form>
-
-            <form id="form-kasir" style="display: none;">
-                <label for="nama-kasir-login">Nama Kasir:</label>
-                <input type="text" id="nama-kasir-login" required>
-                <label for="password-kasir-login">Password:</label>
-                <input type="password" id="password-kasir-login" required>
-                <button type="submit" class="submit-login-btn">Login Kasir</button>
-            </form>
-        </div>
-    </div>
-    <div id="namaPemesanModal" style="display:none; position:fixed; z-index:9999; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); align-items:center; justify-content:center;">
-        <div style="background:#222; padding:2em 2em 1em 2em; border-radius:12px; box-shadow:0 8px 40px #000; max-width:90vw;">
-            <h2>Isi Nama Anda</h2>
-            <input type="text" id="inputNamaPemesan" style="width:100%;padding:0.6em;font-size:1.1em;">
-            <button id="btnSimpanNamaPemesan" style="margin-top:1em; padding:0.7em 2em; border-radius:8px; background:#00f0ff; color:#222; border:none; font-weight:bold;">Simpan</button>
-        </div>
-    </div>
-
-    <div id="print-options-popup" class="popup-overlay" style="display: none;">
-        <div class="popup-content">
-            <h2>Pilih Metode Pembayaran Cetak</h2>
-            <div class="button-group">
-                <button id="btn-print-tunai" class="btn-payment btn-tunai"><i class="fas fa-money-bill-wave"></i> Tunai</button>
-                <button id="btn-print-qris" class="btn-payment btn-qris"><i class="fas fa-qrcode"></i> QRIS</button>
-            </div>
-            <button id="close-print-popup" class="close-popup-btn">&times;</button>
-        </div>
-    </div>
-
-    <div id="app-container" style="display: none;">
-        <header></header>
-        <div class="main-layout">
-            <section id="menu-produk-section">
-                <h2 class="section-title">Daftar Menu HARINFOOD</h2>
-                <div id="produk-list" class="produk-grid"></div>
-            </section>
-            <section id="keranjang-form-section">
-                <h2 class="section-title">Keranjang Belanja</h2>
-                <table class="keranjang-table">
-                    <thead>
-                        <tr>
-                            <th>Produk</th>
-                            <th>Qty</th>
-                            <th>Harga</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="keranjang-items">
-                        <tr><td colspan="4" class="empty-cart-message">Keranjang kosong.</td></tr>
-                    </tbody>
-                </table>
-                <p class="keranjang-total-display">Total: <span id="keranjang-total">Rp 0</span></p>
-                <div class="pembayaran-section-inline">
-                    <label for="nominal-pembayaran">Nominal Pembayaran:</label>
-                    <input type="number" id="nominal-pembayaran" min="0" value="0">
-                    <p>Kembalian: <span id="kembalian-display">Rp 0</span></p>
-                </div>
-
-                <div id="keterangan-section">
-                    <label for="keterangan-pesanan">Keterangan Pesanan (Opsional):</label>
-                    <textarea id="keterangan-pesanan" rows="2"></textarea>
-                </div>
-                
-                <div id="payment-choice-buttons" class="payment-options">
-                    <button id="pesan-whatsapp-pelanggan" class="btn-payment btn-whatsapp"><i class="fab fa-whatsapp"></i> Pesan</button>
-                    <button id="btn-bayar-qris" class="btn-payment btn-qris"><i class="fas fa-qrcode"></i> QRIS</button>
-                </div>
-
-                <button id="cetak-struk-button" class="btn-action btn-print-green" style="display: none; margin-top: 15px;"><i class="fas fa-print"></i> Cetak Struk</button>
-
-
-                <div class="pemesanan-container">
-                    <h2 class="section-title">Detail Pemesanan</h2>
-                    <label for="nama-pemesan">Nama Pemesan:</label>
-                    <input type="text" id="nama-pemesan">
-                    <label for="alamat-pemesan">Alamat Lengkap:</label>
-                    <textarea id="alamat-pemesan" rows="3"></textarea>
-                    
-                    <label id="pesan-info-label" style="color:white; font-size:10px;font-style: italic;">Silahkan memesan dengan menekan tombol di bawah !</label>
-                    <div class="action-buttons">
-                        
-                    </div>
-                </div>
-            </section>
-        </div>
-        <footer>
-            <p>&copy; 2025 HARINFOOD. All Rights Reserved.</p>
-        </footer>
-        <div id="kasir-fabs" style="display: none;">
-            <div class="fab-button fab-share" id="share-order-fab" title="Bagikan Transaksi">
-                <i class="fas fa-share-alt"></i>
-            </div>
-            <div class="fab-button fab-manual" id="add-manual-order-fab" title="Tambah Pesanan Manual">
-                <i class="fas fa-shopping-basket"></i>
-            </div>
-            <div class="fab-button fab-clear" id="clear-cart-fab" title="Bersihkan Keranjang">
-                <i class="fas fa-trash"></i>
-            </div>
-            <div class="fab-button fab-print" id="old-print-order-fab" title="Cetak Struk" style="display: none;">
-                <i class="fas fa-print"></i>
-            </div>
-            <div class="fab-button fab-barcode" id="scan-barcode-fab" title="Scan Barcode">
-                <i class="fas fa-barcode"></i>
-            </div>
-        </div>
-
-        <div id="manualOrderModal" class="modal">
-            <div class="modal-content">
-                <span class="close-button" onclick="closeManualOrderModal()">&times;</span>
-                <h2 class="modal-title">Tambah Pesanan Manual</h2>
-                <label for="manualProductName">Nama Produk:</label>
-                <input type="text" id="manualProductName" required>
-                <label for="manualProductPrice">Harga Satuan:</label>
-                <input type="number" id="manualProductPrice" min="0" required>
-                <label for="manualProductQty">Kuantitas:</label>
-                <input type="number" id="manualProductQty" min="1" value="1" required>
-                <button onclick="addManualOrderItem()">Tambahkan ke Keranjang</button>
-            </div>
-        </div>
-
-        <div id="barcodeScannerModal" class="modal">
-            <div class="modal-content">
-                <span class="close-button" onclick="closeBarcodeScannerModal()">&times;</span>
-                <h2 class="modal-title">Scan Barcode Produk</h2>
-                <label for="barcodeInput">Masukkan atau Scan Barcode:</label>
-                <input type="text" id="barcodeInput" autofocus>
-                <p class="scan-feedback" id="scan-feedback">Siap menerima barcode...</p>
-                <button id="submitBarcodeButton">Tambahkan</button>
-            </div>
-        </div>
-    </div> <script src="script.js"></script>
+    <p>Jika Anda tidak dialihkan secara otomatis, silakan klik tautan ini: <a href="https://harinfood.github.io/harinfood/">https://harinfood.github.io/harinfood/</a></p>
 </body>
 </html>
